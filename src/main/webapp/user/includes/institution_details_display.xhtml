@@ -1,0 +1,44 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+    <p:panelGrid columns="2" layout="grid"
+                 style="margin-bottom:20px;width: 100%">
+
+        <f:facet name="header">
+            <h:outputText value="Institution Details"/>
+        </f:facet>
+
+        <h:outputText value="Name of Institution"/>
+        <h:outputText value=": #{institution.institutionName}"/>
+
+        <h:outputText value="Known as"/>
+        <h:outputText value=": #{institution.knownAs}"/>
+
+
+        <h:outputText value="Accreditation Number"/>
+        <h:outputText value=": #{institution.accreditationNumber}"/>
+
+        <h:outputText value="Institution Type"/>
+        <h:outputText value=": #{institution.institutionType.description}"/>
+
+        <h:outputText value="Contact Number"/>
+        <h:outputText value=": #{institution.contactNumber}"/>
+
+        <h:outputText value="Alternative Contact Number"/>
+        <h:outputText value=": #{institution.alternativeContactNumber}"/>
+
+        <h:outputText value="Email Address"/>
+        <h:outputText value=": #{institution.email}"/>
+
+        <c:if test="#{institution.accreditationStartDate ne null}">
+            <h:outputText value="Accreditation Start Date"/>
+            <h:outputText value=": #{institution.accreditationStartDate}"/>
+
+            <h:outputText value="Accreditation End Date"/>
+            <h:outputText value=": #{institution.accreditationEndDate}"/>
+        </c:if>
+    </p:panelGrid>
+
+</ui:composition>

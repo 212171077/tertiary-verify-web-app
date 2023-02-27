@@ -1,0 +1,29 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <p:tabView id="instDetailsTabView" orientation="left">
+        <p:tab id="instDetailsTab" title="Selected Institution Details">
+            <ui:include src="./institution_details_display.xhtml">
+                <ui:param name="institution" value="#{searchUI.institution}"/>
+            </ui:include>
+        </p:tab>
+        <p:tab id="addressDetilsTab" title="Address Details">
+            <ui:include src="./searched_address_details_display.xhtml">
+                <ui:param name="addressList"
+                          value="#{searchUI.institution.addressList}"/>
+            </ui:include>
+        </p:tab>
+        <p:tab id="courseDetailsTab" title="Course Details">
+            <ui:include src="./course_details_display.xhtml">
+                <ui:param name="courseList" value="#{searchUI.courseList}"/>
+            </ui:include>
+        </p:tab>
+        <p:tab rendered="false" id="qrCodeTab" title="QR Code">
+            <ui:include src="./searched_qr_code_details_display.xhtml">
+                <ui:param name="qrCode" value="#{searchUI.institution.qrCode}"/>
+            </ui:include>
+        </p:tab>
+    </p:tabView>
+
+
+</ui:composition>

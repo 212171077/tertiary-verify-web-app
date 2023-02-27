@@ -1,0 +1,3 @@
+									 <p:column headerText="#%#%"  sortBy="#{var.%##%}" filterBy="#{var.%##%}" >
+									    <h:outputText value="#{var.%##%}"/>
+									 </p:column>

@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <f:facet name="first">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <meta name="viewport"
+              content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+    </f:facet>
+    <title>home page</title>
+    <script type="text/javascript">
+        $(function () {
+            var menu = $('#menu');
+
+            $('#menu-button').on('click', function (e) {
+                if (menu.hasClass('lmenu-active')) {
+                    menu.addClass('fadeOutUp');
+
+                    setTimeout(function () {
+                        menu.removeClass('fadeOutUp fadeInDown lmenu-active');
+                    }, 500);
+                } else {
+                    menu.addClass('lmenu-active fadeInDown');
+                }
+                e.preventDefault();
+            });
+
+            menu.find('a').on('click', function () {
+                menu.removeClass('fadeOutUp fadeInDown lmenu-active');
+            });
+        });
+    </script>
+</h:head>
+
+<h:body styleClass="landing-body">
+    <div id="home" class="landing-wrapper">
+        <div id="header">
+
+            <ui:include src="/link_include.xhtml"/>
+
+            <p:importEnum type="com.pc.entities.enums.ApprovalStatusEnum"/>
+
+            <h:form id="mainForm">
+                <div class="header-content">
+                    <div class="search-box center">
+                        <div style="text-align: center;">
+                            <h1>TERTIARY VERIFY</h1>
+                            <hr/>
+                            <p style="color: white; font-size: 20px">Search Institution</p>
+                        </div>
+                        <h:form id="searchFRM">
+                            <div class="card" style="border-radius: 1%">
+                                <h4 style="color: black; margin: 0px">Search By:</h4>
+                                <p:selectOneRadio layout="responsive" columns="3"
+                                                  style="margin:0px" value="#{searchUI.searchType}">
+                                    <f:selectItems value="#{commonItemUI.searchTypeEnumDD}"
+                                                   var="var" itemLabel="#{var.friendlyName}" itemValue="#{var}"/>
+                                    <p:ajax update="mainForm" onstart="PF('loading').show()"
+                                            oncomplete="PF('loading').hide()"
+                                            listener="#{searchUI.searchTypeClear}"/>
+                                </p:selectOneRadio>
+                            </div>
+
+                            <p:panelGrid class="list-group-item" style="width:100%;margin-bottom: 0px"
+                                         columns="1" layout="grid">
+                                <h:panelGroup styleClass="md-inputfield"
+                                              rendered="#{!searchUI.showProvince}">
+                                    <div class="ui-g-12 ui-md-12">
+                                        <div class="ui-inputgroup ui-g-12 ui-md-12">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputText style="width:100%" id="institutionName"
+                                                             class="form-control" value="#{searchUI.searchText}"
+                                                             placeholder="Enter Key Word..." required="true" type="text"
+                                                             requiredMessage="Please enter key word"/>
+                                            </h:panelGroup>
+                                            <p:spacer width="10"></p:spacer>
+                                            <p:commandButton onstart="PF('loading').show()"
+                                                             oncomplete="PF('loading').hide()"
+                                                             value="Search"
+                                                             update="@form mainForm:searchDialog mainForm"
+                                                             icon="fa fa-search" styleClass="btn btn-block btn-success"
+                                                             actionListener="#{searchUI.search}"/>
+                                        </div>
+
+                                    </div>
+
+                                    <div  class="ui-inputgroup ui-g-12 ui-md-12" style="margin: 0px">
+                                        <p:commandButton
+                                                class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only amber-btn"
+                                                update="@form mainForm:searchDetailsFRM mainForm"
+                                                value="Clear" icon="fa fa-recycle"
+                                                styleClass="btn btn-block orange-btn" style="margin: 0px"
+                                                actionListener="#{searchUI.clearSearch}" process="@this"/>
+                                    </div>
+                                </h:panelGroup>
+
+                                <p:panelGrid styleClass="md-inputfield"
+                                             rendered="#{searchUI.showProvince}">
+                                    <div class="ui-g-12 ui-md-12">
+                                        <div class="ui-inputgroup ui-g-12 ui-md-4">
+                                            <p:selectOneMenu style="width:100%;margin-top: 10px"
+                                                             id="province" value="#{searchUI.province}"
+                                                             converter="#{provinceConvertor}"
+                                                             requiredMessage="Select province" required="true">
+                                                <f:selectItem itemLabel="Select Province"
+                                                              noSelectionOption="true"/>
+                                                <f:selectItems value="#{commonItemUI.selectItemsProvince}"
+                                                               var="rv" itemLabel="#{rv.description}"
+                                                               itemValue="#{rv}"/>
+                                                <p:ajax/>
+                                            </p:selectOneMenu>
+                                        </div>
+
+                                        <div class="ui-inputgroup ui-g-12 ui-md-8">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputText style="width:100%" id="institutionName2"
+                                                             class="form-control" value="#{searchUI.searchText}"
+                                                             placeholder="Enter Key Word..." required="true" type="text"
+                                                             requiredMessage="Please enter key word"/>
+                                            </h:panelGroup>
+                                            <p:spacer width="10"></p:spacer>
+                                            <p:commandButton onstart="PF('loading').show()"
+                                                             oncomplete="PF('loading').hide()"
+                                                             value="Search"
+                                                             update="@form mainForm:searchDialog mainForm"
+                                                             icon="fa fa-search" styleClass="btn btn-block btn-success"
+                                                             actionListener="#{searchUI.search}"/>
+                                        </div>
+
+                                    </div>
+                                    <div  class="ui-inputgroup ui-g-12 ui-md-12" style="margin: 0px">
+                                        <p:commandButton
+                                                class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only amber-btn"
+                                                update="@form mainForm:searchDetailsFRM mainForm"
+                                                value="Clear" icon="fa fa-recycle"
+                                                styleClass="btn btn-block orange-btn" style="margin: 0px"
+                                                actionListener="#{searchUI.clearSearch}" process="@this"/>
+                                    </div>
+                                </p:panelGrid>
+                            </p:panelGrid>
+                        </h:form>
+                    </div>
+                </div>
+
+
+                <p:dialog widgetVar="searchDialog" hideEffect="clip"
+                          showEffect="clip" id="searchDialog" appendTo="@(body)" modal="true"
+                          closable="true" width="80%" height="70%" responsive="true"
+                          position="top" closeOnEscape="true">
+
+
+                    <h:form id="searchDetailsFRM">
+                        <p:fieldset
+                                rendered="#{searchUI.searchByInstitution or searchUI.searchByAccNum}"
+                                styleClass="row search-box margin-top col-md-11 col-md-offset-2">
+
+                            <p:dataTable var="var"
+                                         value="#{searchUI.searchByInstituionDataModel}"
+                                         id="intitutionList" rowKey="#{var.id}" paginator="true" rows="5"
+                                         paginatorPosition="bottom"
+                                         paginatorTemplate="Page {CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         rowsPerPageTemplate="5,10,15,20,25,30,35,40,45,50,55,60,65,75,100"
+                                         reflow="true" lazy="true">
+
+                                <f:facet name="header">
+                                    <h:outputText value="Search Results"/>
+                                </f:facet>
+
+                                <p:column headerText="About Institution" style="width:100px">
+                                    <p:rowToggler/>
+                                </p:column>
+
+                                <p:column headerText="Name of Institution"
+                                          filterBy="#{var.institutionName}"
+                                          sortBy="#{var.institutionName}">
+                                    <h:outputText value="#{var.institutionName}"/>
+                                </p:column>
+
+                                <p:column headerText="Accreditation Number"
+                                          filterBy="#{var.accreditationNumber}"
+                                          sortBy="#{var.accreditationNumber}">
+                                    <h:outputText value="#{var.accreditationNumber}"/>
+                                </p:column>
+
+                                <p:column headerText="Institution Type"
+                                          sortBy="#{var.institutionType.description}">
+                                    <h:outputText value="#{var.institutionType.description}"/>
+                                </p:column>
+
+                                <p:column headerText="Status"
+                                          sortBy="#{var.status.friendlyName}">
+                                    <h:outputText rendered="#{var.status eq ApprovalStatusEnum.Approved}"
+                                                  style="color:green" value="#{var.status.friendlyName}"/>
+                                    <h:outputText
+                                            rendered="#{var.status eq ApprovalStatusEnum.EndDateExpired}"
+                                            style="color:orange"
+                                            value="Accreditation end date has passed and it has not been renewed"/>
+                                </p:column>
+
+                                <p:column width="100" headerText="View Details">
+                                    <p:commandButton value="View More Info"
+                                                     class="btn btn-info btn-xs" onstart="PF('loading').show()"
+                                                     oncomplete="PF('loading').hide();PF('instDetailsDialog').show()"
+                                                     action="#{searchUI.prepareInstitutionData()}"
+                                                     icon="fa fa-search-plus" title="View Institution Details"
+                                                     process="@this"
+                                                     update="mainForm:instDetailsDialog">
+                                        <f:setPropertyActionListener value="#{var}"
+                                                                     target="#{searchUI.institution}"/>
+                                    </p:commandButton>
+
+                                </p:column>
+
+                                <p:rowExpansion>
+                                    <p:accordionPanel multiple="false">
+                                        <p:tab
+                                                title="#{var.institutionName} Institution is registered with the
+										Department of Higher Education with registration:
+										#{var.accreditationNumber}">
+                                            <ui:include src="./user/includes/institution_details_display.xhtml">
+                                                <ui:param name="institution" value="#{var}"/>
+                                            </ui:include>
+                                        </p:tab>
+                                    </p:accordionPanel>
+                                </p:rowExpansion>
+                            </p:dataTable>
+
+                        </p:fieldset>
+
+                        <p:accordionPanel
+                                rendered="#{searchUI.institutionCourseList.size() gt 0 and searchUI.searchByCourse}"
+                                multiple="false">
+                            <p:tab
+                                    title="The Institution(s) below are accredited to offer the course(s)">
+
+                                <p:dataTable var="var" value="#{searchUI.institutionCourseList}"
+                                             reflow="true" rows="3" paginatorPosition="bottom"
+                                             paginator="true">
+                                    <f:facet name="header">
+                                        <h:outputText value="Search Results"/>
+                                    </f:facet>
+
+                                    <p:column headerText="Course Details" width="300">
+
+                                        <p:panelGrid columns="2">
+                                            <h:outputText value="Course Name"/>
+                                            <h:outputText value="#{var.course.description}"/>
+
+                                            <h:outputText value="Course Type"/>
+                                            <h:outputText value="#{var.course.courseType.description}"/>
+
+                                            <h:outputText value="Course Level"/>
+                                            <h:outputText value="#{var.course.courseLevel.description}"/>
+                                        </p:panelGrid>
+
+                                    </p:column>
+
+                                    <p:column headerText="Name of Institution"
+                                              filterBy="#{var.institution.institutionName}"
+                                              sortBy="#{var.institution.institutionName}">
+                                        <h:outputText value="#{var.institution.institutionName}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Contact Number"
+                                              sortBy="#{var.institution.contactNumber}">
+                                        <h:outputText value="#{var.institution.contactNumber}"/>
+                                    </p:column>
+
+                                    <p:column rendered="false" headerText="Alternative Contact Number"
+                                              sortBy="#{var.institution.alternativeContactNumber}">
+                                        <h:outputText
+                                                value="#{var.institution.alternativeContactNumber}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Email Address" width="200"
+                                              sortBy="#{var.institution.email}">
+                                        <h:outputText  value="#{var.institution.email}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Status"
+                                              sortBy="#{var.status.friendlyName}">
+                                        <h:outputText
+                                                rendered="#{var.institution.status eq ApprovalStatusEnum.Approved}"
+                                                style="color:green"
+                                                value="#{var.institution.status.friendlyName}"/>
+                                        <h:outputText
+                                                rendered="#{var.institution.status eq ApprovalStatusEnum.EndDateExpired}"
+                                                style="color:orange"
+                                                value="Accreditation end date has passed and it has not been renewed"/>
+                                    </p:column>
+
+                                    <p:column width="100" headerText="View Details">
+                                        <p:commandButton value="View" class="btn btn-info btn-xs"
+                                                         icon="fa fa-search-plus" title="Update" process="@this"
+                                                         update="mainForm:courseDetailsDialog"
+                                                         onstart="PF('loading').show()"
+                                                         oncomplete="PF('loading').hide();PF('courseDetailsDialog').show()">
+
+                                            <f:setPropertyActionListener value="#{var}"
+                                                                         target="#{searchUI.institutionCourse}"/>
+                                        </p:commandButton>
+                                    </p:column>
+
+                                </p:dataTable>
+                            </p:tab>
+                        </p:accordionPanel>
+                    </h:form>
+
+                </p:dialog>
+
+
+                <p:dialog widgetVar="courseDetailsDialog" hideEffect="clip"
+                          showEffect="clip" id="courseDetailsDialog" appendTo="@(body)"
+                          modal="true" closable="true" width="80%" height="50%"
+                          responsive="true" position="top" closeOnEscape="true">
+
+                    <p:panelGrid style="width:100%" columns="1">
+                        <f:facet name="header">
+                            <p:outputLabel value="Course Details"/>
+                        </f:facet>
+
+
+                        <p:panelGrid columns="2" layout="grid" style="margin-bottom:20px">
+                            <h:outputText value="Course Name"/>
+                            <h:outputText
+                                    value=": #{searchUI.institutionCourse.course.description}"/>
+
+                            <h:outputText value="Course Type"/>
+                            <h:outputText
+                                    value=": #{searchUI.institutionCourse.course.courseType.description}"/>
+
+                            <h:outputText value="Course Level"/>
+                            <h:outputText
+                                    value=": #{searchUI.institutionCourse.course.courseLevel.description}"/>
+
+
+                        </p:panelGrid>
+
+                    </p:panelGrid>
+
+                    <ui:include src="./user/includes/institution_details_display.xhtml">
+                        <ui:param name="institution" value="#{searchUI.institutionCourse.institution}"/>
+                    </ui:include>
+
+                </p:dialog>
+
+                <p:dialog widgetVar="coursesDialog" hideEffect="clip"
+                          showEffect="clip" id="coursesDialog" appendTo="@(body)"
+                          modal="true" closable="true" width="70%" height="50%"
+                          responsive="true" position="top" closeOnEscape="true">
+
+                    <p:accordionPanel multiple="false">
+                        <p:tab title="#{searchUI.institution.institutionName} ">
+
+                            <p:fieldset
+                                    rendered="#{searchUI.institutionCourseList.size() gt 0 and (searchUI.searchByInstitution or searchUI.searchByAccNum)}"
+                                    style="margin-right:4%;margin-left:4%"
+                                    styleClass="row search-box margin-top col-md-11 col-md-offset-2">
+
+
+                                <p:dataTable
+                                        rendered="#{searchUI.institutionCourseList.size() gt 0}"
+                                        var="var" value="#{searchUI.institutionCourseList}"
+                                        reflow="true" rows="5" paginatorPosition="bottom"
+                                        paginator="true">
+                                    <f:facet name="header">
+                                        <h:outputText value="Accredited Course(s)"/>
+                                    </f:facet>
+
+                                    <p:column headerText="Course Name"
+                                              filterBy="#{var.course.description}"
+                                              sortBy="#{var.course.description}">
+                                        <h:outputText value="#{var.course.description}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Course Type"
+                                              sortBy="#{var.courseType.description}">
+                                        <h:outputText value="#{var.course.courseType.description}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Course Level"
+                                              sortBy="#{var.courseLevel.description}">
+                                        <h:outputText value="#{var.course.courseLevel.description}"/>
+                                    </p:column>
+
+
+                                </p:dataTable>
+
+                            </p:fieldset>
+
+                            <p:fieldset
+                                    rendered="#{searchUI.institutionCourseList.size() eq 0}"
+                                    style="margin-right:4%;margin-left:4%"
+                                    styleClass="row search-box margin-top col-md-11 col-md-offset-2">
+
+                                <h4 style="color: red">No course available</h4>
+
+                            </p:fieldset>
+                        </p:tab>
+                    </p:accordionPanel>
+                </p:dialog>
+
+
+                <p:dialog widgetVar="addressDialog" hideEffect="clip"
+                          showEffect="clip" id="addressDialog" appendTo="@(body)"
+                          modal="true" closable="true" width="70%" height="60%"
+                          responsive="true" position="top" closeOnEscape="true">
+
+                    <ui:include src="./user/includes/address_details_display.xhtml">
+
+                        <ui:param name="addressList"
+                                  value="#{searchUI.institution.addressList}"/>
+                        <ui:param name="form"
+                                  value="addrDetailsDialog"/>
+                    </ui:include>
+
+                </p:dialog>
+
+                <p:dialog widgetVar="instDetailsDialog" header="Institution Details" hideEffect="clip"
+                          showEffect="clip" id="instDetailsDialog" appendTo="@(body)"
+                          modal="true" closable="true" width="80%" height="70%"
+                          responsive="true" position="top" closeOnEscape="true">
+                    <p:ajax event="close" listener="#{addressUI.reset()}"/>
+
+                    <h:form id="instDetailsDialogFrm">
+                        <ui:include src="./user/includes/searched_inst_details_display.xhtml">
+                        </ui:include>
+                    </h:form>
+
+                </p:dialog>
+
+                <ui:include src="/common_dialog.xhtml"/>
+
+            </h:form>
+        </div>
+
+        <ui:include src="/home_footer_include_2.xhtml"/>
+
+    </div>
+
+</h:body>
+
+</html>

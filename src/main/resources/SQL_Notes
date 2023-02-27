@@ -1,0 +1,11 @@
+UPDATE tertiary_verify.address t1, tertiary_verify.institution t2 SET t1.institution_id = t2.id
+WHERE t1.id = t2.residential_address ;
+
+ALTER TABLE tertiary_verify.institution DROP COLUMN residential_address;
+
+UPDATE reported_institutions SET address = NULL WHERE institution_id IS NOT NULL;
+
+ALTER TABLE mail_log MODIFY COLUMN content_mssg varchar(5000) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL;
+
+
+COMMIT;

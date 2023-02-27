@@ -1,0 +1,7 @@
+C:\Users\njaka\Documents\MyProjects\GautengSchools\GuatengSchools\src\main\webapp\resources>sass primefaces-barcelona-myown/theme.scss primefaces-barcelona-myown/layout-mytheme.css
+
+--CD to PrectName\src\main\webapp\resources
+
+Then Run: sass primefaces-barcelona-myown/theme.scss primefaces-barcelona-myown/layout-mytheme.css
+
+Compy Genereted Files to barcelona-layout/css

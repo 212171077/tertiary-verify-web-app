@@ -1,0 +1,204 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">user management</ui:define>
+
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <div class="card">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><i class="fa fa-users"></i> User Management</h3>
+                    </div>
+                    <h:form id="addUserForm">
+                        <p:fieldset>
+                            <br/>
+                            <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group">
+
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:focus for="idNum"/>
+                                    <p:inputMask mask="#{commonUI.ID_NUMBER_FORMAT}" value="#{userUI.user.rsaId}"
+                                                 id="idNum" style="width:100%" required="true"
+                                                 requiredMessage="Please enter id number"/>
+                                    <p:outputLabel value="Enter ID Number" for="idNum"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:selectOneMenu id="title" value="#{userUI.user.title}"
+                                                     converter="#{titleConvertor}" style="width:100%"
+                                                     requiredMessage="Select title" required="true">
+                                        <f:selectItem itemLabel="Select Title" noSelectionOption="true"/>
+                                        <f:selectItems value="#{commonItemUI.selectItemsTitle}" var="rv"
+                                                       itemLabel="#{rv.description}" itemValue="#{rv}"/>
+                                    </p:selectOneMenu>
+                                </h:panelGroup>
+
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText
+                                            validatorMessage="Please enter a valid name. Ensure that no special charectors or numbers are provided"
+                                            value="#{userUI.user.name}" id="name" style="width:100%" required="true"
+                                            requiredMessage="Please enter your name">
+                                        <f:validateRegex pattern="#{commonUI.NAME_FORMAT}"></f:validateRegex>
+                                    </p:inputText>
+                                    <p:outputLabel value="Enter Name" for="name"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText
+                                            validatorMessage="Please enter a valid surname Ensure that no special charectors or numbers are provided"
+                                            value="#{userUI.user.surname}" id="surname" style="width:100%"
+                                            required="true" requiredMessage="Please enter your surname">
+                                        <f:validateRegex pattern="#{commonUI.NAME_FORMAT}"></f:validateRegex>
+                                    </p:inputText>
+                                    <p:outputLabel value="Enter Surname" for="surname"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputMask mask="#{commonUI.CELLPHONE_FORMAT}" value="#{userUI.user.cellNumber}"
+                                                 id="cell" style="width:100%" required="true"
+                                                 requiredMessage="Please enter cell numbere"/>
+                                    <p:outputLabel value="Enter Cell Number" for="cell"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText value="#{userUI.user.email}" id="email" style="width:100%"
+                                                 required="true" type="email"
+                                                 validatorMessage="Please enter a valid email address"
+                                                 requiredMessage="Please enter email address">
+                                        <f:validateRegex pattern="#{commonUI.EMAIL_FORMAT}"/>
+                                    </p:inputText>
+                                    <p:outputLabel value="Enter Email" for="email"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <br/>
+                                    <p:commandButton value="Submit" icon="fa fa-save" onstart="PF('loading').show()"
+                                                     oncomplete="PF('loading').hide()" class="btn btn-primary"
+                                                     update="@form usersForm" actionListener="#{userUI.registeUser}"/>
+                                    <p:spacer width="10"/>
+                                    <p:commandButton value="Clear" icon="fa fa-recycle" class="btn orange-btn"
+                                                     process="@this" update="@form" actionListener="#{userUI.reset}"/>
+                                </h:panelGroup>
+
+                            </p:panelGrid>
+
+
+                        </p:fieldset>
+                    </h:form>
+                </div>
+                <div class="card">
+                    <h:form id="usersForm">
+
+                        <ui:include src="/user/download_lazy.xhtml">
+                            <ui:param name="file_name" value="Users"/>
+                            <ui:param name="target" value="userList"/>
+                        </ui:include>
+                        <p:dataTable var="var" value="#{userRoleUI.userListDataModel}" id="userList" rowKey="#{var.id}"
+                                     paginator="true" rows="5" paginatorPosition="bottom"
+                                     paginatorTemplate="Page {CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="5,10,15,20,25,30,35,40,45,50,55,60,65,75,100" reflow="true"
+                                     lazy="true" selectionMode="single" selection="#{userRoleUI.selectedUser}">
+
+                            <p:ajax event="rowSelect" update=":rolesForm" listener="#{userRoleUI.loadUserRoles}"/>
+                            <f:facet name="header">
+                                <h:outputText value="Registered Users"/>
+                            </f:facet>
+                            <p:column headerText="ID Number" sortBy="#{var.rsaId}" filterBy="#{var.rsaId}">
+                                <h:outputText value="#{var.rsaId}"/>
+                            </p:column>
+                            <p:column headerText="Name" sortBy="#{var.name}" filterBy="#{var.name}">
+                                <h:outputText value="#{var.name}"/>
+                            </p:column>
+                            <p:column headerText="Surname" sortBy="#{var.surname}" filterBy="#{var.name}">
+                                <h:outputText value="#{var.surname}"/>
+                            </p:column>
+                            <p:column headerText="Registered Date" sortBy="#{var.createDate}">
+                                <h:outputText value="#{var.createDate}"/>
+                            </p:column>
+                            <p:column width="100" exportable="false">
+                                <p:commandButton action="#{userRoleUI.preperPopup}"
+                                                 oncomplete="PF('userRoleDialog').show()"
+                                                 class="btn btn-block btn-info btn-xs" icon="fa fa-search-plus"
+                                                 title="View Roles" process="@this" update="userRoleDialog">
+                                    <f:setPropertyActionListener value="#{var}" target="#{userRoleUI.selectedUser}"/>
+                                </p:commandButton>
+                                <p:spacer width="10"></p:spacer>
+                                <p:commandButton action="#{userRoleUI.deleteUser}" class="btn btn-block red-btn btn-xs"
+                                                 icon="fa fa-trash-o" title="Delete User" process="@this"
+                                                 update="@form">
+                                    <p:confirm header="Confirm"
+                                               message="This will delete alldata related to this user, Are you sure you want to delete this user?"
+                                               icon="ui-icon-warning"/>
+                                    <f:setPropertyActionListener value="#{var}" target="#{userRoleUI.user}"/>
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </div>
+                <div class="card">
+                    <h:form id="rolesForm">
+                        <p:panel rendered="#{userRoleUI.showRoleDetails}" toggleable="true" id="rolePanel"
+                                 header="Manage Role(s) For: #{userRoleUI.selectedUser.name} #{userRoleUI.selectedUser.surname}"
+                                 styleClass="margin">
+
+                            <p:pickList style="width:100%" id="roleAnySelectionPickList"
+                                        value="#{userRoleUI.rolesDualList}" var="roleRW"
+                                        itemLabel=" #{roleRW.description}" itemValue="#{roleRW}"
+                                        converter="#{roleConvertor}" responsive="true" showCheckbox="true"
+                                        showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains"
+                                        effect="drop" styleClass="picklist-responsive">
+                                <p:ajax event="transfer"/>
+                                <f:facet name="sourceCaption">Available Roles</f:facet>
+                                <f:facet name="targetCaption">Selected user roles</f:facet>
+                            </p:pickList>
+                            <br/>
+                            <p:panelGrid class="list-group-item" style="width:100%" columns="2" layout="grid">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:commandButton value="Clear" icon="fa fa-recycle" class="btn orange-btn"
+                                                     process="@form usersForm" update="@form"
+                                                     actionListener="#{userRoleUI.clearSelectUser}"/>
+                                </h:panelGroup>
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:spacer></p:spacer> <p:commandButton onstart="PF('loading').show()"
+                                                                           oncomplete="PF('loading').hide()"
+                                                                           value="Submit" icon="fa fa-save"
+                                                                           class="btn btn-primary"
+                                                                           update="@form usersForm"
+                                                                           actionListener="#{userRoleUI.saveUserRoles}"/>
+                                </h:panelGroup>
+                            </p:panelGrid>
+                        </p:panel>
+                        <br/>
+                    </h:form>
+                </div>
+
+            </div>
+        </div>
+        <p:dialog widgetVar="userRoleDialog" hideEffect="clip" showEffect="clip" id="userRoleDialog" appendTo="@(body)"
+                  modal="true" closable="true" width="25%" height="50%" responsive="true" closeOnEscape="true">
+            <f:facet name="header">
+                <h4 class="box-title">#{userRoleUI.selectedUser.name} #{userRoleUI.selectedUser.surname} Role(s)</h4>
+            </f:facet>
+            <h:form id="userRoleDialogForm">
+                <div id="external-events">
+                    <p:repeat var="var" value="#{userRoleUI.currentUserRoles}">
+                        <div class="external-event bg-green">#{var.role.description}</div>
+                    </p:repeat>
+                </div>
+
+                <p:fieldset rendered="#{userRoleUI.currentUserRoles.size() lt 1}">
+                    <br/>
+                    <div class="alert alert-info">
+                        No Roles available for #{userRoleUI.selectedUser.name} #{userRoleUI.selectedUser.surname}
+                    </div>
+                </p:fieldset>
+            </h:form>
+        </p:dialog>
+
+    </ui:define>
+
+</ui:composition>

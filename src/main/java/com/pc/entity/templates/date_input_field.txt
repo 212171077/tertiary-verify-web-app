@@ -1,0 +1,6 @@
+  														<h:panelGroup styleClass="md-inputfield">
+	                                                        <p:calendar inputStyle="width:50%" id="%##%" value="#{%%%%UI.%%%%.%##%}" showOn="button" required="true" requiredMessage="Please enter #%#%" navigator="true" pattern="#{commonUI.DATE_FORMAT}">
+	                                                        	<p:ajax  event = "dateSelect" update="@form"/>
+	                                                        </p:calendar>
+	                                                        <p:outputLabel class="box-title" value="#%#%" for="%##%" />
+                                                        </h:panelGroup>

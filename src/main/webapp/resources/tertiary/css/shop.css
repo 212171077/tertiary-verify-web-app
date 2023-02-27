@@ -1,0 +1,64 @@
+.btn.btn-quote {
+    width: 100%;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: PURPLE;
+    color: #fff;
+    border-radius: 0px;
+    font-weight: bold;
+}
+
+.item-info {
+    text-align: center;
+    border: 1px solid red;
+    color: #fff;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    margin-top: 10px;
+    padding: 5px;
+    background-color: #000;
+}
+
+.item-cart {
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #eee;
+    margin-top: 20px;
+    border-radius: 11px;
+}
+
+.item-qty {
+    text-align: center;
+}
+
+.modal-title {
+    margin: 0;
+    line-height: 1.42857143;
+}
+
+.btn.check-out {
+    padding-left: 50px;
+    padding-right: 50px;
+    background-color: #333;
+    color: #fff;
+}
+
+.modal-header {
+	background-color: #333;
+}
+
+.personal-details {
+    text-align: center;
+    padding: 5px;
+    font-weight: bold;
+    border: 1px solid;
+    color: #fff;
+    background-color: #333;
+    margin-bottom: 20px;
+    margin-top: 10px;
+}
+
+.input-space {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}

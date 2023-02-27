@@ -1,0 +1,104 @@
+package com.pc.ui;
+import javax.faces.bean.ViewScoped;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Component;
+
+import com.pc.entities.####;
+import com.pc.framework.AbstractUI;
+import com.pc.service.####Service;
+
+@Component("%%%%UI")
+@ViewScoped
+public class ####UI extends AbstractUI{
+
+	@Autowired
+	####Service %%%%Service;
+
+	private #### %%%%;
+
+	@PostConstruct
+	public void init() {
+		%%%% = new ####();
+	}
+
+	public void save####()
+	{
+		try {
+			%%%%Service.save####(%%%%);
+		} catch (Exception e) {
+			displayErrorMssg(e.getMessage());
+			e.printStackTrace();
+		}
+	}
+	
+	public void delete####()
+	{
+		try {
+			%%%%Service.delete####(%%%%);
+		} catch (Exception e) {
+			displayErrorMssg(e.getMessage());
+			e.printStackTrace();
+		}
+	}
+	
+	public List<####> findAll####()
+	{
+		List<####> list=new ArrayList<>();
+		try {
+			list= %%%%Service.findAll####();
+		} catch (Exception e) {
+			displayErrorMssg(e.getMessage());
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+	
+	public Page<####> findAll####Pageable()
+	{
+		Pageable p=null;
+		try {
+			return %%%%Service.findAll####(p);
+		} catch (Exception e) {
+			displayErrorMssg(e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public List<####> findAll####Sort()
+	{
+		Sort s=null;
+		List<####> list=new ArrayList<>();
+		try {
+			list =%%%%Service.findAll####(s);
+		} catch (Exception e) {
+			displayErrorMssg(e.getMessage());
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	public void reset() {
+		%%%% = new ####();
+	}
+	
+
+	public #### get####() {
+		return %%%%;
+	}
+
+	public void set####(#### %%%%) {
+		this.%%%% = %%%%;
+	}
+
+}

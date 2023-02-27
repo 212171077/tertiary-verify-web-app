@@ -1,0 +1,308 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml"
+                xmlns:hf="http://highfaces.org">
+
+    <ui:define name="title">Dashboard</ui:define>
+    menu-form
+    <ui:define name="head">
+        <script type="text/javascript">
+            //<![CDATA[
+            function skinBar() {
+                this.cfg.shadow = false;
+                this.cfg.title = '';
+                this.cfg.seriesColors = ['#64B5F6', '#FFD54F'];
+                this.cfg.grid = {
+                    background: '#ffffff',
+                    borderColor: '#ffffff',
+                    gridLineColor: '#F5F5F5',
+                    shadow: false
+                };
+                this.cfg.axesDefaults = {
+                    borderWidth: 0.1,
+                    borderColor: 'bdbdbd',
+                    rendererOptions: {
+                        textColor: '#666F77'
+                    }
+                };
+                this.cfg.seriesDefaults = {
+                    shadow: false,
+                    lineWidth: 1,
+                    renderer: $.jqplot.BarRenderer,
+                    markerOptions: {
+                        shadow: false,
+                        size: 7,
+                        style: 'circle'
+                    }
+                }
+            }
+
+            //]]>
+
+
+        </script>
+        <style type="text/css">
+            .main-content {
+                padding: 0;
+            }
+
+
+        </style>
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form id="mainForm">
+            <div class="ui-g dashboard">
+
+                <div class="ui-g-12 ui-md-6 ui-lg-3">
+                    <div class="ui-g card overview-box overview-box-1">
+                        <span class="overview-box-name">Reported Institution(s)</span> <span
+                            class="overview-box-count">#{reportUI.totalInstitutionReported}</span>
+                        <!--  <span class="overview-box-badge">+30%</span> -->
+                        <p:graphicImage name="images/dashboard/chart-1.svg"
+                                        library="barcelona-layout"/>
+                    </div>
+                </div>
+                <div class="ui-g-12 ui-md-6 ui-lg-3">
+                    <div class="ui-g card overview-box overview-box-2">
+						<span class="overview-box-name">Institution(s) Under
+							Investigation</span> <span class="overview-box-count">#{reportUI.totalInstitutionUndetInvestigation}</span>
+                        <!--  <span class="overview-box-badge">+45%</span> -->
+                        <p:graphicImage name="images/dashboard/chart-2.svg"
+                                        library="barcelona-layout"/>
+
+                    </div>
+
+                </div>
+                <div class="ui-g-12 ui-md-6 ui-lg-3">
+                    <div class="ui-g card overview-box overview-box-3">
+                        <span class="overview-box-name">Accreditation Course(s)</span> <span
+                            class="overview-box-count">#{reportUI.totalCourse}</span>
+                        <!--  <span class="overview-box-badge">-75%</span> -->
+                        <p:graphicImage name="images/dashboard/chart-3.svg"
+                                        library="barcelona-layout"/>
+                    </div>
+                </div>
+                <div class="ui-g-12 ui-md-6 ui-lg-3">
+                    <div class="ui-g card overview-box overview-box-4">
+                        <span class="overview-box-name">Approved Institution(s)</span> <span
+                            class="overview-box-count">#{reportUI.totalInstitution}</span>
+                        <!--  <span class="overview-box-badge">25%</span> -->
+                        <p:graphicImage name="images/dashboard/chart-4.svg"
+                                        library="barcelona-layout"/>
+                    </div>
+                </div>
+
+                <div class="ui-g-12">
+                    <p:panelGrid class="list-group-item" style="width:100%" columns="1"
+                                 layout="grid">
+                        <hf:chart credits="" type="pie" title="Institution Courses">
+                            <hf:chartSerie name="Total Course"
+                                           value="#{highfacesUI.institutionCourseList}" var="point"
+                                           point="#{point.total}" tickLabel="#{point.label}"
+                                           dataLabel="&lt;b>{point.name}&lt;/b>: {point.percentage:.1f} % &lt;i>({point.y})&lt;/i>"/>
+
+                        </hf:chart>
+                    </p:panelGrid>
+
+                    <p:panelGrid rendered="false">
+                        <hf:chart credits="" type="column"
+                                  value="#{highfacesUI.mappedList}" var="birth" stacking="normal"
+                                  point="#{birth.amount}" tickLabel="#{birth.year}"
+                                  title="Inverstigator Tasks"/>
+                    </p:panelGrid>
+
+                    <br/>
+                    <p:panelGrid id="pgRepInst" class="list-group-item"
+                                 style="width:100%" columns="1" layout="grid">
+                        <p style="margin-bottom: 0;">Select Search Criteria</p>
+                        <p:panelGrid class="list-group-item" style="width:100%"
+                                     columns="4" layout="grid">
+                            <h:panelGroup>
+                                <p:outputLabel value="Year"/>
+                                <p:selectOneMenu id="year" value="#{highfacesUI.year}"
+                                                 style="width:100%" requiredMessage="Select Year"
+                                                 required="true">
+                                    <f:selectItem itemLabel="---Select Year---"
+                                                  noSelectionOption="true"/>
+                                    <f:selectItems value="#{highfacesUI.yearList}" var="rv"
+                                                   itemLabel="#{rv}" itemValue="#{rv}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:outputLabel value="Month"/>
+                                <p:selectOneMenu id="mon" value="#{highfacesUI.mon}"
+                                                 style="width:100%" requiredMessage="Select month"
+                                                 required="false">
+                                    <f:selectItem itemLabel="---Select Month---"
+                                                  noSelectionOption="true"/>
+                                    <f:selectItems value="#{highfacesUI.monthList}" var="rv"
+                                                   itemLabel="#{rv}" itemValue="#{rv}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:outputLabel value="Province"/>
+                                <p:selectOneMenu id="province" value="#{highfacesUI.province}"
+                                                 converter="#{provinceConvertor}" style="width:100%"
+                                                 requiredMessage="Select province" required="false">
+                                    <f:selectItem itemLabel="---Select Province---"
+                                                  noSelectionOption="true"/>
+                                    <f:selectItems value="#{commonItemUI.selectItemsProvince}"
+                                                   var="rv" itemLabel="#{rv.description}" itemValue="#{rv}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <br/>
+                                <p:commandButton onstart="PF('loading').show()"
+                                                 oncomplete="PF('loading').hide()" value="Search"
+                                                 styleClass="btn btn-info" update="pgRepInst"
+                                                 icon="fa fa-search-plus"
+                                                 action="#{highfacesUI.reloadInstitution()}"/>
+                                <p:spacer width="10"/>
+                                <p:commandButton process="@this" value="Clear"
+                                                 icon="fa fa-recycle" class="btn orange-btn" update="pgRepInst"
+                                                 actionListener="#{highfacesUI.clearSearchCriteria}"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:panelGrid class="list-group-item" style="width:100%"
+                                     columns="1" layout="grid" rendered="true">
+                            <hf:chart credits="" height="150%" type="column"
+                                      title="Reported Institution" xaxisLabel="Institution"
+                                      yaxisLabel="Number Of Reports">
+                                <p:ajax></p:ajax>
+                                <hf:chartSerie colorByPoint="true" type="column" name="column"
+                                               var="inst" tickLabel="#{inst.label}"
+                                               value="#{highfacesUI.reportedIns}" point="#{inst.total}"/>
+                            </hf:chart>
+                        </p:panelGrid>
+                    </p:panelGrid>
+
+                    <br/>
+
+                    <p:panelGrid class="list-group-item" style="width:100%" columns="1" layout="grid">
+                        <h:form id="mailLogForm">
+
+                            <ui:include src="/user/download_lazy.xhtml">
+                                <ui:param name="file_name" value="Pending Mails"/>
+                                <ui:param name="target" value="emailContentList"/>
+                            </ui:include>
+                            <p:dataTable var="var" value="#{emailContentUI.dataModel}" id="emailContentList"
+                                         rowKey="#{var.id}" paginator="true" rows="5" paginatorPosition="bottom"
+                                         paginatorTemplate="Page {CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         rowsPerPageTemplate="5,10,15,20,25,30,35,40,45,50,55,60,65,75,100"
+                                         reflow="true"
+                                         lazy="true">
+
+                                <f:facet name="header">
+                                    <h:outputText value="Pending Email(s)"/>
+                                </f:facet>
+
+                                <p:column headerText="Subject" sortBy="#{var.subject}" filterBy="#{var.subject}">
+                                    <h:outputText value="#{var.subject}"/>
+                                </p:column>
+
+                                <p:column headerText="To Email" sortBy="#{var.toEmail}" filterBy="#{var.toEmail}">
+                                    <h:outputText value="#{var.toEmail}"/>
+                                </p:column>
+
+
+                                <p:column headerText="From Email" sortBy="#{var.fromEmail}" filterBy="#{var.fromEmail}">
+                                    <h:outputText value="#{var.fromEmail}"/>
+                                </p:column>
+
+                                <p:column headerText="Status" exportable="false">
+
+                                    <h:panelGroup rendered="#{dashboardUI.isNullOrEmpty(var.errorMessage)}">
+                                        <i style="color: green" class="fa fa-check-circle fa-2x"></i>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup rendered="#{!dashboardUI.isNullOrEmpty(var.errorMessage)}">
+                                        <i style="color: red" class="fa fa-times-circle fa-2x"></i>
+                                    </h:panelGroup>
+
+                                </p:column>
+
+
+                                <p:column headerText="Error Message">
+                                    <h:outputText style="color: red"
+                                                  value="#{dashboardUI.trimErrorMessage(var.errorMessage)}"/>
+                                </p:column>
+
+                                <p:column headerText="Date Created" sortBy="#{var.createDate}">
+                                    <h:outputText value="#{var.createDate}">
+                                        <f:convertDateTime pattern="dd MMM yyyy"/>
+                                    </h:outputText>
+                                </p:column>
+
+
+                            </p:dataTable>
+                        </h:form>
+                    </p:panelGrid>
+
+
+                    <br/>
+                    <p:panelGrid class="list-group-item" style="width:100%" columns="1" layout="grid">
+                        <h:form id="pendingMailForm">
+
+                            <ui:include src="/user/download_lazy.xhtml">
+                                <ui:param name="file_name" value="Mail Logs"/>
+                                <ui:param name="target" value="mailLogList"/>
+                            </ui:include>
+                            <p:dataTable var="var" value="#{mailLogUI.dataModel}" id="mailLogList" rowKey="#{var.id}"
+                                         paginator="true" rows="5"
+                                         paginatorPosition="bottom"
+                                         paginatorTemplate="Page {CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         rowsPerPageTemplate="5,10,15,20,25,30,35,40,45,50,55,60,65,75,100"
+                                         reflow="true" lazy="true">
+                                <f:facet name="header">
+                                    <h:outputText value="Mail Log List"/>
+                                </f:facet>
+                                <p:column headerText="Subject" sortBy="#{var.subject}" filterBy="#{var.subject}">
+                                    <h:outputText value="#{var.subject}"/>
+                                </p:column>
+
+                                <p:column headerText="To Email" sortBy="#{var.toEmail}" filterBy="#{var.toEmail}">
+                                    <h:outputText value="#{var.toEmail}"/>
+                                </p:column>
+
+
+                                <p:column headerText="From Email" sortBy="#{var.fromEmail}" filterBy="#{var.fromEmail}">
+                                    <h:outputText value="#{var.fromEmail}"/>
+                                </p:column>
+
+                                <p:column headerText="Status" exportable="false">
+
+                                    <h:panelGroup rendered="#{!var.error}">
+                                        <i style="color: green" class="fa fa-check-circle fa-2x"></i>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup rendered="#{var.error}">
+                                        <i style="color: red" class="fa fa-times-circle fa-2x"></i>
+                                    </h:panelGroup>
+
+                                </p:column>
+
+
+                                <p:column headerText="Error Message">
+                                    <h:outputText style="color: red"
+                                                  value="#{dashboardUI.trimErrorMessage(var.errorMessage)}"/>
+                                </p:column>
+
+                                <p:column headerText="Date Created" sortBy="#{var.createDate}">
+                                    <h:outputText value="#{var.createDate}">
+                                        <f:convertDateTime pattern="dd MMM yyyy"/>
+                                    </h:outputText>
+                                </p:column>
+
+                            </p:dataTable>
+
+                        </h:form>
+                    </p:panelGrid>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

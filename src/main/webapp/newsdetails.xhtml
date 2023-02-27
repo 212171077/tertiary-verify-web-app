@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <f:facet name="first">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+    </f:facet>
+    <title>info</title>
+    <h:outputStylesheet name="css/my_style.css" library="barcelona-layout"/>
+    <script type="text/javascript">
+        $(function () {
+            var menu = $('#menu');
+
+            $('#menu-button').on('click', function (e) {
+                if (menu.hasClass('lmenu-active')) {
+                    menu.addClass('fadeOutUp');
+
+                    setTimeout(function () {
+                        menu.removeClass('fadeOutUp fadeInDown lmenu-active');
+                    }, 500);
+                } else {
+                    menu.addClass('lmenu-active fadeInDown');
+                }
+                e.preventDefault();
+            });
+
+            menu.find('a').on('click', function () {
+                menu.removeClass('fadeOutUp fadeInDown lmenu-active');
+            });
+        });
+
+        $(window).load(function () {
+            $(".post-module").hover(function () {
+                $(this).find(".description").stop().animate(
+                    {
+                        height: "toggle",
+                        opacity: "toggle"
+                    },
+                    300
+                );
+            });
+        });
+    </script>
+
+</h:head>
+
+<h:body styleClass="landing-body">
+    <div id="home" class="landing-wrapper">
+        <div id="header">
+            <ui:include src="/link_include.xhtml"/>
+            <div class="header-content">
+                <h1>TERTIARY VERIFY</h1>
+            </div>
+        </div>
+
+        <div class="news-details-box news-details-center">
+            <div style="text-align: center;">
+                <div class="ui-g-12 ui-lg-12" style="text-align: start">
+                    <div class="blog-card">
+                        <div class="meta">
+
+                            <p:graphicImage value="#{imageModelUI.image}" style="width: 100%;height: 80%" class="photo" cache="false">
+                                <f:param name="id" value="#{newsDetailsUI.news.image.id}" />
+                            </p:graphicImage>
+
+                            <ul class="details">
+                                <li class="author"><a href="#">#{newsDetailsUI.news.lastUpdateUser.name} #{newsDetailsUI.news.lastUpdateUser.surname}</a></li>
+                                <li class="date">#{commonItemUI.formatDate(newsDetailsUI.news.createDate)}</li>
+                            </ul>
+                        </div>
+                        <div class="description">
+                            <h1>#{newsDetailsUI.news.title}</h1>
+                            <h2>#{newsDetailsUI.news.subTitle}</h2>
+                            <p>
+                                <h:outputText escape="false" value="#{newsDetailsUI.news.description}"/>
+                            </p>
+                            <p class="read-more">
+                                <h:link styleClass="secondary" value="BACK"
+                                        outcome="/newsandevents"/>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <ui:include src="/home_footer_include.xhtml"/>
+    </div>
+
+
+</h:body>
+
+</html>

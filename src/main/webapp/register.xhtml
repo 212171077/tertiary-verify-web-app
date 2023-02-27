@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:sec="http://www.springframework.org/security/tags"> 
+<h:head></h:head> 
+<body>
+	<ui:composition template="/WEB-INF/template_landing_page/commonLayout.xhtml">
+		 <p:importEnum type="com.pc.entities.enums.ReportTypeEnum" />
+		<ui:define name="content">
+			 <!-- Main content -->
+		    <section class="content">
+		    	<p:growl p:autoUpdate="true"  showSummary="false" showDetail="true" sticky="false" id="growl"> </p:growl>
+	    		 <div class="container">
+		            <div class="search">
+		               
+		                <div class="row search-box margin-top col-md-8 col-md-offset-2">
+								 <h:form id="mainForm">
+							 		<h2 class="section-title">Register</h2>
+							 		<hr/>
+									<p:panelGrid  class="list-group-item" style="width:100%" columns="1" layout="grid" >
+										 <h:panelGroup styleClass="md-inputfield">
+											   <small><p:outputLabel value="Enter ID Number" for="idNum" /></small>
+							                   <p:inputMask mask="#{commonUI.ID_NUMBER_FORMAT}" value="#{userUI.user.rsaId}" id="idNum"  style="width:100%" required="true"   requiredMessage="Please enter id number"/>
+								          </h:panelGroup>
+								          
+								          <h:panelGroup styleClass="md-inputfield">
+												<small><p:outputLabel value="Title"  /></small>
+												<p:selectOneMenu id="title" value="#{userUI.user.title}"  converter="#{titleConvertor}"  style="width:100%" requiredMessage="Select title" required="true">
+													<f:selectItem itemLabel="---Select Title---" noSelectionOption="true" />
+													<f:selectItems value="#{commonItemUI.selectItemsTitle}" var="rv" itemLabel="#{rv.description}" itemValue="#{rv}" />
+												</p:selectOneMenu>
+										</h:panelGroup>	
+												   
+										 <h:panelGroup styleClass="md-inputfield">
+											   <small><p:outputLabel value="Enter Name" for="name" /></small>
+							                   <p:inputText validatorMessage="Please enter a valid name. Ensure that no special charectors or numbers are provided" value="#{userUI.user.name}"  id="name"  style="width:100%" required="true" requiredMessage="Please enter your name">
+							                   	<f:validateRegex  pattern="#{commonUI.NAME_FORMAT}"></f:validateRegex>
+							                   </p:inputText>
+								           </h:panelGroup>
+								                     
+								          <h:panelGroup styleClass="md-inputfield">
+												<small><p:outputLabel value="Enter Surname" for="surname" /></small>
+							                    <p:inputText validatorMessage="Please enter a valid surname Ensure that no special charectors or numbers are provided" value="#{userUI.user.surname}" id="surname"  style="width:100%" required="true"  requiredMessage="Please enter your surname">
+							                    	<f:validateRegex  pattern="#{commonUI.NAME_FORMAT}"></f:validateRegex>
+							                    </p:inputText>
+								           </h:panelGroup>
+								                     
+								           <h:panelGroup styleClass="md-inputfield">
+											     <small><p:outputLabel value="Enter Cell Number" for="cell" /></small>
+							                     <p:inputMask  mask="#{commonUI.CELLPHONE_FORMAT}"   value="#{userUI.user.cellNumber}" id="cell"  style="width:100%" required="true"  requiredMessage="Please enter cell numbere"/>
+								           </h:panelGroup>
+								                     
+								            <h:panelGroup styleClass="md-inputfield">
+												 <small><p:outputLabel value="Enter Email" for="email" /></small>
+							                     <p:inputText  value="#{userUI.user.email}" id="email"  style="width:100%" required="true" type="email" validatorMessage="#{userUI.user.email} is not valid"   requiredMessage="Please enter email address">
+							                     	<f:validateRegex pattern="#{commonUI.EMAIL_FORMAT}"/>
+							                     </p:inputText>
+								             </h:panelGroup>
+								                     
+								             <h:panelGroup styleClass="md-inputfield">
+												  <small><p:outputLabel value="Enter Password" for="pass" /></small>
+							                      <p:password value="#{userUI.user.password}" id="pass" feedback="true" style="width:100%" inline="true" />
+							                 </h:panelGroup>
+							                 
+							                 <h:panelGroup styleClass="md-inputfield">      
+								             	 <p:commandButton onstart="PF('loading').show()" oncomplete="PF('loading').hide()" value="Submit" styleClass="btn btn-info" update="@form" icon="fa fa-save"  action="#{userUI.registeUser}"/>
+								             	 <p:spacer width="10"/>
+						                     	 <p:commandButton process="@this" value="Clear" icon="fa fa-recycle" class="btn btn-warning" update="@form" actionListener="#{userUI.reset}"/>
+						                    </h:panelGroup>
+								             
+								             
+								                
+								    </p:panelGrid>
+								</h:form>
+								<br/>
+								<br/>
+		                </div>
+		            </div>
+		        </div>
+		        
+		      
+				
+				
+		        
+			</section>
+    	</ui:define>
+    </ui:composition>
+</body> 
+</html>

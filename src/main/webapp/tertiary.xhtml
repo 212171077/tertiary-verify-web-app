@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:sec="http://www.springframework.org/security/tags"> 
+<h:head></h:head> 
+<body>
+	<ui:composition template="/WEB-INF/template2/commonLayout.xhtml">
+		 <p:importEnum type="com.pc.entity.enums.YesNoEnum" />
+		<ui:define name="content">
+			 <!-- Main content -->
+		    <section class="content">
+		    		<h:form id="mainForm">
+			    		<div class="box box-default color-palette-box">
+							<div class="box-header with-border">
+								 <h3 class="box-title"><i class="fa fa-th"></i> Lookups</h3>
+							 </div>
+							     <div class="box box-default color-palette-box">
+								 	   <div class="box-body">
+								 	   		<p:panelGrid  class="list-group-item" style="width:100%" columns="2" layout="grid" >
+									        
+									        
+									         </p:panelGrid>
+								 	   </div>
+					   			 </div>
+					   		 </div>
+					 </h:form>
+			</section>
+    	</ui:define>
+    </ui:composition>
+</body> 
+</html>

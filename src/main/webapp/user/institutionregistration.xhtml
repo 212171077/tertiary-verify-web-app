@@ -1,0 +1,920 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Institutions</ui:define>
+
+    <ui:define name="content">
+        <p:importEnum type="com.pc.entities.enums.ApprovalStatusEnum"/>
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <h:form id="mainForm">
+                    <div class="card">
+                        <!-- This is used to as display name on the lookups.xhtml -->
+                        <!--  <displayName>City</displayName> -->
+                        <h3 class="box-title">
+                            <i class="fa fa-university"></i> Institution Registration
+                        </h3>
+
+                        <p:panelGrid id="pgInstDet" style="width:100%" columns="1" layout="grid">
+                            <h:panelGrid style="width:100%"
+                                         rendered="#{institutionUI.registrationSuccessful}">
+                                <div class="callout callout-success">
+
+                                    <h4 style="margin: 0px">
+                                        <i class="icon fa fa-check"></i> Institution updated
+                                        successful
+                                    </h4>
+                                </div>
+                            </h:panelGrid>
+                            <h:panelGrid style="width:100%"
+                                         rendered="#{institutionUI.institution.status eq ApprovalStatusEnum.Expired}">
+                                <div class="callout callout-warning">
+                                    <p style="margin: 0px">The Accreditation Dates for the
+                                        selected institution has expired, please update the date
+                                        accordingly</p>
+                                </div>
+                            </h:panelGrid>
+
+                            <p:wizard flowListener="#{institutionUI.onFlowProcess}" id="wiz"
+                                      widgetVar="wiz">
+                                <p:tab id="InstitutionDetails" title="Institution Details">
+                                    <div class="card card-w-title">
+                                        <p:panelGrid class="list-group-item" style="width:100%"
+                                                     styleClass="form-group" columns="2" layout="grid">
+                                            <h:panelGroup>
+                                                <p:outputLabel value="Institution Type"/>
+                                                <p:selectOneMenu
+                                                        disabled="#{institutionUI.institution.status eq ApprovalStatusEnum.Expired}"
+                                                        id="instType"
+                                                        value="#{institutionUI.institution.institutionType}"
+                                                        converter="#{institutionTypeConvertor}" style="width:100%"
+                                                        requiredMessage="Select institution type" required="true">
+                                                    <f:selectItem itemLabel="Select one"
+                                                                  noSelectionOption="true"/>
+                                                    <f:selectItems
+                                                            value="#{commonItemUI.selectItemsInstitutionType}"
+                                                            var="rv" itemLabel="#{rv.description}" itemValue="#{rv}"/>
+                                                    <p:ajax/>
+                                                </p:selectOneMenu>
+                                            </h:panelGroup>
+
+
+                                            <h:panelGroup styleClass="md-inputfield"
+                                                          style="margin-top: 20px">
+
+                                                <p:inputText
+                                                        disabled="#{institutionUI.institution.status eq ApprovalStatusEnum.Expired}"
+                                                        id="institutionName"
+                                                        value="#{institutionUI.institution.institutionName}"
+                                                        style="width:100%" required="true"
+                                                        requiredMessage="Please enter name of institution">
+                                                    <p:ajax/>
+                                                </p:inputText>
+                                                <p:outputLabel class="box-title" value="Name of Institution"
+                                                               for="institutionName"/>
+                                            </h:panelGroup>
+
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputText
+                                                        disabled="#{institutionUI.institution.status eq ApprovalStatusEnum.Expired}"
+                                                        id="knownAs" value="#{institutionUI.institution.knownAs}"
+                                                        style="width:100%" required="true"
+                                                        requiredMessage="Please enter the name that the institution is known as">
+                                                    <p:ajax/>
+                                                </p:inputText>
+                                                <p:outputLabel class="box-title" value="Known As"
+                                                               for="knownAs"/>
+                                            </h:panelGroup>
+
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputMask
+                                                        disabled="#{institutionUI.institution.status eq ApprovalStatusEnum.Expired}"
+                                                        mask="#{commonUI.CELLPHONE_FORMAT}"
+                                                        value="#{institutionUI.institution.contactNumber}"
+                                                        id="contactNumber" style="width:100%" required="true"
+                                                        requiredMessage="Please enter contact numbere">
+                                                    <p:ajax/>
+                                                </p:inputMask>
+                                                <p:outputLabel value="Contact Number" for="contactNumber"/>
+                                            </h:panelGroup>
+
+                                            <h:panelGroup styleClass="md-inputfield">
+
+                                                <p:inputMask
+                                                        disabled="#{institutionUI.institution.status eq ApprovalStatusEnum.Expired}"
+                                                        mask="#{commonUI.CELLPHONE_FORMAT}"
+                                                        value="#{institutionUI.institution.alternativeContactNumber}"
+                                                        id="alternativeContactNumber" style="width:100%"
+                                                        required="true"
+                                                        requiredMessage="Please enter alternative contact numbere">
+                                                    <p:ajax/>
+                                                </p:inputMask>
+                                                <p:outputLabel value="Alternative Contact Number"
+                                                               for="alternativeContactNumber"/>
+                                            </h:panelGroup>
+
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputText
+                                                        disabled="#{institutionUI.institution.status eq ApprovalStatusEnum.Expired}"
+                                                        type="email" id="email"
+                                                        value="#{institutionUI.institution.email}"
+                                                        style="width:100%" required="true"
+                                                        validatorMessage="Please enter a valid email address"
+                                                        requiredMessage="Please enter email address">
+                                                    <p:ajax/>
+                                                    <f:validateRegex pattern="#{commonUI.EMAIL_FORMAT}"/>
+                                                </p:inputText>
+                                                <p:outputLabel class="box-title" value="Email Address"
+                                                               for="email"/>
+                                            </h:panelGroup>
+
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputText
+                                                        disabled="#{institutionUI.institution.status eq ApprovalStatusEnum.Expired}"
+                                                        id="accreditationNumber"
+                                                        value="#{institutionUI.institution.accreditationNumber}"
+                                                        style="width:100%" required="true"
+                                                        requiredMessage="Please enter accreditation number">
+                                                    <p:ajax/>
+                                                </p:inputText>
+                                                <p:outputLabel class="box-title"
+                                                               value="Accreditation Number" for="accreditationNumber"/>
+                                            </h:panelGroup>
+
+                                            <h:panelGroup styleClass="md-inputfield"
+                                                          rendered="#{institutionUI.institution.accreditationStartDate ne null}">
+                                                <p:panelGrid style="width:100%" columns="2">
+                                                    <h:panelGroup styleClass="md-inputfield">
+                                                        <p:outputLabel class="box-title"
+                                                                       value="Accreditation Start Date"
+                                                                       for="accreditationStartDate"/>
+                                                        <br/>
+                                                        <p:calendar id="accreditationStartDate"
+                                                                    value="#{institutionUI.institution.accreditationStartDate}"
+                                                                    showOn="button" required="true"
+                                                                    requiredMessage="Please enter accreditation start date"
+                                                                    navigator="true" pattern="dd-MMM-yyyy">
+                                                            <p:ajax event="dateSelect" update="@form"
+                                                                    listener="#{institutionUI.prepareEndDateAndUpdateStatus()}"/>
+                                                        </p:calendar>
+                                                    </h:panelGroup>
+
+                                                    <h:panelGroup styleClass="md-inputfield">
+                                                        <p:outputLabel class="box-title"
+                                                                       value="Accreditation End Date"
+                                                                       for="accreditationEndDate"/>
+                                                        <br/>
+                                                        <p:calendar disabled="true" id="accreditationEndDate"
+                                                                    value="#{institutionUI.institution.accreditationEndDate}"
+                                                                    showOn="button" navigator="true"
+                                                                    pattern="dd-MMM-yyyy">
+                                                            <p:ajax/>
+                                                        </p:calendar>
+                                                    </h:panelGroup>
+                                                </p:panelGrid>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                    </div>
+                                </p:tab>
+
+                                <p:tab id="addrDetails" title="Address Details">
+                                    <div class="card card-w-title">
+                                        <h:panelGroup id="addressDetails">
+                                            <p:fieldset legend="Add Address">
+                                                <p:panelGrid class="list-group-item" style="width:100%"
+                                                             styleClass="form-group" columns="2" layout="grid">
+                                                    <h:panelGroup styleClass="md-inputfield"></h:panelGroup>
+                                                    <h:panelGroup styleClass="md-inputfield"></h:panelGroup>
+
+                                                    <h:panelGroup styleClass="md-inputfield">
+                                                        <p:inputText
+                                                                disabled="#{institutionUI.institution.status eq ApprovalStatusEnum.Expired}"
+                                                                id="resAddressLine1"
+                                                                value="#{institutionUI.address.addressLine1}"
+                                                                style="width:100%"
+                                                                requiredMessage="Please enter residential address line 1">
+                                                            <p:ajax/>
+                                                        </p:inputText>
+                                                        <p:outputLabel value="Institution Address line 1 *"
+                                                                       for="resAddressLine1"/>
+                                                    </h:panelGroup>
+
+                                                    <h:panelGroup styleClass="md-inputfield">
+                                                        <p:inputText
+                                                                disabled="#{institutionUI.institution.status eq ApprovalStatusEnum.Expired}"
+                                                                id="resAddressLine2"
+                                                                value="#{institutionUI.address.addressLine2}"
+                                                                style="width:100%"
+                                                                requiredMessage="Please enter residential address line 2">
+                                                            <p:ajax/>
+                                                        </p:inputText>
+                                                        <p:outputLabel value="Institution Address line 2"
+                                                                       for="resAddressLine2"/>
+                                                    </h:panelGroup>
+
+                                                    <h:panelGroup>
+                                                        <p:outputLabel value="Province(Address Line 3) *"/>
+                                                        <p:selectOneMenu
+                                                                disabled="#{institutionUI.institution.status eq ApprovalStatusEnum.Expired}"
+                                                                id="province"
+                                                                value="#{institutionUI.address.province}"
+                                                                converter="#{provinceConvertor}"
+                                                                style="width:100%"
+                                                                requiredMessage="Select province">
+                                                            <f:selectItem itemLabel="Select one"
+                                                                          noSelectionOption="true"/>
+                                                            <f:selectItems value="#{commonItemUI.selectItemsProvince}"
+                                                                           var="rv" itemLabel="#{rv.description}"
+                                                                           itemValue="#{rv}"/>
+                                                            <p:ajax onstart="PF('loading').show()"
+                                                                    oncomplete="PF('loading').hide()"
+                                                                    update="mainForm:addressDetails"/>
+                                                        </p:selectOneMenu>
+
+                                                    </h:panelGroup>
+
+                                                    <h:panelGroup id="pgCity"
+                                                                  rendered="#{institutionUI.address.province ne null}">
+                                                        <p:outputLabel value="City/Town *"/>
+                                                        <p:selectOneMenu
+                                                                disabled="#{institutionUI.institution.status eq ApprovalStatusEnum.Expired}"
+                                                                id="city" value="#{institutionUI.address.city}"
+                                                                converter="#{cityConvertor}" style="width:100%"
+                                                                requiredMessage="Select city" required="true">
+                                                            <f:selectItem itemLabel="Select one"
+                                                                          noSelectionOption="true"/>
+                                                            <f:selectItems value="#{institutionUI.selectItemsCity}"
+                                                                           var="rv" itemLabel="#{rv.description}"
+                                                                           itemValue="#{rv}"/>
+                                                            <p:ajax/>
+                                                        </p:selectOneMenu>
+                                                    </h:panelGroup>
+
+
+                                                    <h:panelGroup styleClass="md-inputfield">
+                                                        <p:inputText
+                                                                disabled="#{institutionUI.institution.status eq ApprovalStatusEnum.Expired}"
+                                                                id="examinationNumber"
+                                                                value="#{institutionUI.address.examinationNumber}"
+                                                                style="width:100%"
+                                                                requiredMessage="Please enter examination centre number">
+                                                            <p:ajax/>
+                                                        </p:inputText>
+                                                        <p:outputLabel value="Examination Centre Number"
+                                                                       for="examinationNumber"/>
+                                                    </h:panelGroup>
+
+
+                                                    <h:panelGroup styleClass="md-inputfield"
+                                                                  rendered="#{institutionUI.address.latitude ne null}">
+                                                        <p:inputText disabled="true" id="gps"
+                                                                     value="latitude: #{institutionUI.address.latitude} longitude: #{institutionUI.address.latitude}"
+                                                                     style="width:100%">
+                                                            <p:ajax/>
+                                                        </p:inputText>
+                                                        <p:outputLabel value="GPS Coordinates" for="gps"/>
+                                                    </h:panelGroup>
+
+                                                    <h:panelGroup styleClass="md-inputfield" rendered="false">
+                                                        <!--MAP BUTTON NOT IN USE-->
+                                                        <p:outputLabel value="Pin Location" style="width:100%"/>
+                                                        <br/>
+                                                        <p:commandButton
+                                                                disabled="#{institutionUI.institution.status eq ApprovalStatusEnum.Expired}"
+                                                                update="mapDialog mapForm"
+                                                                oncomplete="PF('mapDialog').show()"
+                                                                value="Click To Select Location" class="btn btn-default"
+                                                                icon="fa fa-map-marker" title="Pin Location"
+                                                                process="@this"/>
+                                                    </h:panelGroup>
+
+                                                </p:panelGrid>
+                                                <br/>
+                                                <p:commandButton
+                                                        disabled="#{institutionUI.institution.status eq ApprovalStatusEnum.Expired}"
+                                                        value="Submit" icon="fa fa-save"
+                                                        class="btn btn-primary"
+                                                        update="mainForm:addressDetails"
+                                                        actionListener="#{institutionUI.addAddress}"/>
+
+                                            </p:fieldset>
+
+                                            <p:spacer height="10"/>
+                                            <p:panelGrid id="pgAddressList" class="list-group-item" style="width:100%"
+                                                         columns="1" layout="grid">
+                                                <p:dataTable var="var" value="#{institutionUI.addressList}"
+                                                             reflow="true" rows="5" paginatorPosition="bottom"
+                                                             paginator="true">
+
+                                                    <f:facet name="header">
+                                                        <h:outputText value="Address List"/>
+                                                    </f:facet>
+
+
+                                                    <p:column headerText="Address Line 1"
+                                                              sortBy="#{var.addressLine1}">
+                                                        <h:outputText value="#{var.addressLine1}"/>
+                                                    </p:column>
+
+                                                    <p:column headerText="Address Line 2"
+                                                              sortBy="#{var.addressLine2}">
+                                                        <h:outputText value="#{var.addressLine2}"/>
+                                                    </p:column>
+
+                                                    <p:column headerText="Province"
+                                                              sortBy="#{var.province.description}">
+                                                        <h:outputText value="#{var.province.description}"/>
+                                                    </p:column>
+
+                                                    <p:column headerText="City/Town"
+                                                              sortBy="#{var.city.description}">
+                                                        <h:outputText value="#{var.city.description}"/>
+                                                    </p:column>
+
+                                                    <p:column headerText="Examination Centre Number"
+                                                              sortBy="#{var.examinationNumber}">
+                                                        <h:outputText value="#{var.examinationNumber}"/>
+                                                    </p:column>
+
+                                                    <p:column headerText="Latitude" rendered="false">
+                                                        <h:outputText value="#{var.latitude}"/>
+                                                    </p:column>
+
+                                                    <p:column headerText="Longitude" rendered="false">
+                                                        <h:outputText value="#{var.longitude}"/>
+                                                    </p:column>
+
+                                                    <p:column width="95">
+
+                                                        <p:commandButton
+                                                                disabled="#{institutionUI.institution.status eq ApprovalStatusEnum.Expired}"
+                                                                class="btn btn-block btn-xs"
+                                                                update="mainForm:addressDetails"
+                                                                icon="fa fa-database" title="Update" process="@this"
+                                                                action="#{institutionUI.prepareAddressUpdate}">
+
+                                                            <f:setPropertyActionListener value="#{var}"
+                                                                                         target="#{institutionUI.address}"/>
+
+                                                        </p:commandButton>
+
+                                                        <p:commandButton
+                                                                disabled="#{institutionUI.institution.status eq ApprovalStatusEnum.Expired}"
+                                                                class="btn btn-block red-btn btn-xs"
+                                                                update="mainForm:addressDetails"
+                                                                icon="fa fa-trash-o" title="Delete"
+                                                                process="mainForm:pgAddressList"
+                                                                action="#{institutionUI.removeAddress}">
+                                                            <p:confirm header="Confirm"
+                                                                       message="Are you sure you want to delete this address?"
+                                                                       icon="ui-icon-warning"/>
+                                                            <f:setPropertyActionListener value="#{var}"
+                                                                                         target="#{institutionUI.address}"/>
+                                                        </p:commandButton>
+                                                    </p:column>
+
+                                                </p:dataTable>
+                                            </p:panelGrid>
+                                        </h:panelGroup>
+                                    </div>
+                                </p:tab>
+
+                                <p:tab id="CourseDetails" title="Course(s) Details">
+                                    <div class="card card-w-title">
+                                        <h:panelGroup id="courseAddressDetails">
+                                            <p:panelGrid class="list-group-item" style="width:100%"
+                                                         columns="1" layout="grid">
+
+                                                <h:panelGroup styleClass="md-inputfield" style="margin-top: 20px">
+                                                    <p:outputLabel value="Search Course *"/>
+                                                    <br/>
+                                                    <p:autoComplete inputStyleClass="width:80%" style="width:80%"
+                                                                    inputStyle="width:80%"
+                                                                    disabled="#{institutionUI.institution.status eq ApprovalStatusEnum.Expired}"
+                                                                    var="var" itemLabel="#{var.description}"
+                                                                    itemValue="#{var}"
+                                                                    forceSelection="true" id="course" dropdown="false"
+                                                                    value="#{institutionUI.course}"
+                                                                    converter="#{courseConvertor}"
+                                                                    completeMethod="#{commonItemUI.autoCompleteCorse}">
+                                                        <p:column headerText="Course Name">
+                                                            <h:outputText value="#{var.description}"/>
+                                                        </p:column>
+
+                                                        <p:column headerText="Type">
+                                                            <h:outputText value="#{var.courseType.description}"/>
+                                                        </p:column>
+
+                                                        <p:column headerText="Level">
+                                                            <h:outputText value="#{var.courseLevel.description}"/>
+                                                        </p:column>
+                                                        <p:ajax event="itemSelect" update="mainForm:pgAddrs"/>
+
+                                                    </p:autoComplete>
+
+                                                </h:panelGroup>
+                                                <h:panelGroup id="pgAddrs">
+                                                    <h:panelGroup styleClass="md-inputfield">
+                                                        <h:outputText
+                                                                value="Select the address(s) which the course is offered"/>
+                                                        <p:dataTable var="var" value="#{institutionUI.addressList}"
+                                                                     reflow="true" paginatorPosition="bottom"
+                                                                     paginator="false">
+
+                                                            <p:column headerText="Address Line 1"
+                                                                      sortBy="#{var.addressLine1}">
+                                                                <h:outputText value="#{var.addressLine1}"/>
+                                                            </p:column>
+
+                                                            <p:column headerText="Address Line 2"
+                                                                      sortBy="#{var.addressLine2}">
+                                                                <h:outputText value="#{var.addressLine2}"/>
+                                                            </p:column>
+
+                                                            <p:column headerText="Province"
+                                                                      sortBy="#{var.province.description}">
+                                                                <h:outputText value="#{var.province.description}"/>
+                                                            </p:column>
+
+                                                            <p:column headerText="City/Town"
+                                                                      sortBy="#{var.city.description}">
+                                                                <h:outputText value="#{var.city.description}"/>
+                                                            </p:column>
+
+                                                            <p:column headerText="Examination Centre Number"
+                                                                      sortBy="#{var.examinationNumber}">
+                                                                <h:outputText value="#{var.examinationNumber}"/>
+                                                            </p:column>
+
+                                                            <p:column headerText="Latitude" rendered="false">
+                                                                <h:outputText value="#{var.latitude}"/>
+                                                            </p:column>
+
+                                                            <p:column headerText="Longitude" rendered="false">
+                                                                <h:outputText value="#{var.longitude}"/>
+                                                            </p:column>
+
+                                                            <p:column width="45" headerText="Select">
+
+                                                                <p:commandButton
+                                                                        rendered="#{!institutionUI.courseAddressInTheList(var)}"
+                                                                        disabled="#{institutionUI.institution.status eq ApprovalStatusEnum.Expired}"
+                                                                        class="btn btn-block btn-xs green-btn"
+                                                                        update="mainForm:courseAddressDetails"
+                                                                        icon="fa fa-check-square" title="Select"
+                                                                        process="@form"
+                                                                        action="#{institutionUI.addCourseAddress(var)}">
+
+                                                                    <f:setPropertyActionListener value="#{var}"
+                                                                                                 target="#{institutionUI.address}"/>
+                                                                </p:commandButton>
+
+                                                                <p:commandButton
+                                                                        rendered="#{institutionUI.courseAddressInTheList(var)}"
+                                                                        disabled="#{institutionUI.institution.status eq ApprovalStatusEnum.Expired}"
+                                                                        class="btn btn-block red-btn btn-xs"
+                                                                        update="mainForm:courseAddressDetails"
+                                                                        icon="fa fa-times" title="Remove"
+                                                                        process="@form"
+                                                                        action="#{institutionUI.removeCourseAddress(var)}">
+                                                                    <f:setPropertyActionListener value="#{var}"
+                                                                                                 target="#{institutionUI.address}"/>
+                                                                </p:commandButton>
+
+                                                            </p:column>
+
+                                                        </p:dataTable>
+                                                    </h:panelGroup>
+                                                </h:panelGroup>
+
+
+                                                <h:panelGroup styleClass="md-inputfield">
+                                                    <p:commandButton
+                                                            disabled="#{institutionUI.institution.status eq ApprovalStatusEnum.Expired}"
+                                                            value="Add Course" icon="fa fa-save"
+                                                            class="btn btn-primary" update="@form"
+                                                            actionListener="#{institutionUI.addCourse}"/>
+
+                                                    <p:spacer width="30"/>
+                                                    <p:commandButton
+                                                            disabled="#{institutionUI.institution.status eq ApprovalStatusEnum.Expired}"
+                                                            value="Clear" icon="fa fa-recycle" class="btn"
+                                                            styleClass="orange-btn"
+                                                            update="@form"
+                                                            actionListener="#{institutionUI.resetCourse}"/>
+                                                </h:panelGroup>
+
+                                            </p:panelGrid>
+
+                                            <p:panelGrid class="list-group-item" style="width:100%"
+                                                         columns="1" layout="grid">
+                                                <p:dataTable var="var" value="#{institutionUI.courseList}"
+                                                             reflow="true" rows="5" paginatorPosition="bottom"
+                                                             paginator="true">
+
+                                                    <f:facet name="header">
+                                                        <h:outputText value="Course List"/>
+                                                    </f:facet>
+
+                                                    <p:column headerText="Id" sortBy="#{var.id}"
+                                                              rendered="false">
+                                                        <h:outputText value="#{var.id}"/>
+                                                    </p:column>
+
+                                                    <p:column headerText="Course Name"
+                                                              sortBy="#{var.courseName}">
+                                                        <h:outputText value="#{var.description}"/>
+                                                    </p:column>
+
+                                                    <p:column headerText="Course Type"
+                                                              sortBy="#{var.courseType.description}">
+                                                        <h:outputText value="#{var.courseType.description}"/>
+                                                    </p:column>
+
+                                                    <p:column headerText="Course Level"
+                                                              sortBy="#{var.courseLevel.description}">
+                                                        <h:outputText value="#{var.courseLevel.description}"/>
+                                                    </p:column>
+
+                                                    <p:column width="90">
+
+                                                        <p:commandButton class="btn btn-block btn-warning btn-xs"
+                                                                         icon="fa fa-map-marker" title="View Address"
+                                                                         update="courseAddressDialog"
+                                                                         oncomplete="PF('courseAddressDialog').show()"
+                                                                         process="@this">
+                                                            <f:setPropertyActionListener value="#{var}"
+                                                                                         target="#{institutionUI.course}"/>
+                                                        </p:commandButton>
+
+                                                        <p:commandButton
+                                                                disabled="#{institutionUI.institution.status eq ApprovalStatusEnum.Expired}"
+                                                                class="btn btn-block btn-warning btn-xs" update="@form"
+                                                                icon="fa fa-trash-o" title="Delete" process="@this"
+                                                                action="#{institutionUI.removeCourse}">
+                                                            <p:confirm header="Confirm"
+                                                                       message="Are you sure you want to delete this course?"
+                                                                       icon="ui-icon-warning"/>
+                                                            <f:setPropertyActionListener value="#{var}"
+                                                                                         target="#{institutionUI.course}"/>
+                                                        </p:commandButton>
+                                                    </p:column>
+
+                                                </p:dataTable>
+                                            </p:panelGrid>
+                                        </h:panelGroup>
+                                    </div>
+                                </p:tab>
+
+                                <p:tab id="confirmTab" title="Confirm Details">
+                                    <p:panelGrid rendered="false" class="list-group-item" style="width:100%"
+                                                 columns="1" layout="grid">
+                                        <!--QR CODE NOT IN USE-->
+                                        <p:panelGrid columns="2">
+                                            <p:barcode value="#{institutionUI.institution.qrCode}"
+                                                       format="png" width="300" height="300" type="qr"/>
+                                        </p:panelGrid>
+                                    </p:panelGrid>
+
+
+                                    <ui:include src="./includes/confirm_institution_details_display.xhtml">
+                                        <ui:param name="institution" value="#{institutionUI.institution}"/>
+                                        <ui:param name="addressList" value="#{institutionUI.addressList}"/>
+                                        <ui:param name="courseList" value="#{institutionUI.courseList}"/>
+                                    </ui:include>
+
+                                    <p:panelGrid rendered="false" class="list-group-item"
+                                                 style="width:100%;margin-top: 20px"
+                                                 columns="2" layout="grid">
+                                        <!--DOWNLOAD QR CODE BUTTON NOT IN USE-->
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:commandButton
+                                                    disabled="#{institutionUI.institution.status eq ApprovalStatusEnum.Expired}"
+                                                    oncomplete="PF('wiz').loadStep(PF('wiz').cfg.steps [0], true)"
+                                                    value="Download QR Code" icon="fa fa-download"
+                                                    class="btn btn-primary" update="@form" ajax="false"
+                                                    actionListener="#{institutionUI.downloadQRCode()}"/>
+                                            <p:spacer width="10"></p:spacer>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+
+                                </p:tab>
+                            </p:wizard>
+
+                        </p:panelGrid>
+
+                        <p:panelGrid class="list-group-item" style="width:100%"
+                                     columns="1" layout="grid">
+                            <p:commandButton
+                                    oncomplete="PF('wiz').loadStep(PF('wiz').cfg.steps [0], true)"
+                                    value="Clear All" icon="fa fa-recycle" class="btn"
+                                    styleClass="orange-btn"
+                                    process="@this" update="@form"
+                                    actionListener="#{institutionUI.reset}"/>
+                        </p:panelGrid>
+
+
+                    </div>
+
+
+                    <div class="card">
+                        <h:form id="tableForm">
+                            <p:panelGrid columns="1" layout="grid">
+                                <style type="text/css">
+                                    .expired {
+                                        background-color: #ffb3b3 !important;
+                                        background-image: none !important;
+                                        color: #000000 !important;
+                                    }
+
+                                    .end_date_expired {
+                                        background-color: #f9e79f !important;
+                                        background-image: none !important;
+                                        color: #000000 !important;
+                                    }
+
+                                    .active {
+                                        background-color: #abebc6 !important;
+                                        background-image: none !important;
+                                        color: #000000 !important;
+                                    }
+
+                                    .pending {
+                                        background-color: #EBCBFC !important;
+                                        background-image: none !important;
+                                        color: #000000 !important;
+                                    }
+
+
+                                    /* basic positioning */
+                                    .legend {
+                                        list-style: none;
+                                        margin: 0px;
+                                    }
+
+                                    .legend li {
+                                        float: left;
+                                        margin-right: 10px;
+                                    }
+
+                                    .legend span {
+                                        border: 1px solid #ccc;
+                                        float: left;
+                                        width: 12px;
+                                        height: 12px;
+                                        margin: 2px;
+                                    }
+                                </style>
+
+                                <ul class="legend">
+                                    <li><span class="active"></span> Approved</li>
+                                    <li><span class="pending"></span> Pending Approval</li>
+                                    <li><span class="end_date_expired"></span> End Date</li>
+                                    <li><span class="expired"></span> Expired</li>
+                                </ul>
+
+
+                                <p:dataTable
+                                        rowStyleClass="#{(var.status eq ApprovalStatusEnum.Expired  or var.status eq  ApprovalStatusEnum.Rejected) ? 'expired' : (var.status eq ApprovalStatusEnum.EndDateExpired ? 'end_date_expired' : (var.status eq ApprovalStatusEnum.PendingApproval ? 'pending' : 'active'))}"
+                                        var="var" value="#{institutionUI.dataModel}"
+                                        id="intitutionList" rowKey="#{var.id}" paginator="true"
+                                        rows="5" paginatorPosition="bottom"
+                                        paginatorTemplate="Page {CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                        rowsPerPageTemplate="5,10,15,20,25,30,35,40,45,50,55,60,65,75,100"
+                                        reflow="true" lazy="true">
+
+                                    <f:facet name="header">
+                                        <h:outputText value="Institution List"/>
+                                    </f:facet>
+
+                                    <p:column headerText="Name of Institution"
+                                              filterBy="#{var.institutionName}"
+                                              sortBy="#{var.institutionName}">
+                                        <h:outputText value="#{var.institutionName}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Accreditation Number"
+                                              filterBy="#{var.accreditationNumber}"
+                                              sortBy="#{var.accreditationNumber}">
+                                        <h:outputText value="#{var.accreditationNumber}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Institution Type"
+                                              sortBy="#{var.institutionType.description}">
+                                        <h:outputText value="#{var.institutionType.description}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Contact Number"
+                                              sortBy="#{var.contactNumber}">
+                                        <h:outputText value="#{var.contactNumber}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Alternative Contact Number"
+                                              sortBy="#{var.alternativeContactNumber}">
+                                        <h:outputText value="#{var.alternativeContactNumber}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Email Address" sortBy="#{var.email}">
+                                        <h:outputText value="#{var.email}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Accreditation Start Date"
+                                              sortBy="#{var.accreditationStartDate}">
+                                        <h:outputText value="#{var.accreditationStartDate}">
+                                            <f:convertDateTime pattern="dd MMM yyyy"/>
+                                        </h:outputText>
+                                    </p:column>
+
+                                    <p:column headerText="Accreditation End Date"
+                                              sortBy="#{var.accreditationEndDate}">
+                                        <h:outputText value="#{var.accreditationEndDate}">
+                                            <f:convertDateTime pattern="dd MMM yyyy"/>
+                                        </h:outputText>
+                                    </p:column>
+
+                                    <p:column headerText="Status" sortBy="#{var.status}">
+                                        <h:outputText value="#{var.status.friendlyName}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Date Created" sortBy="#{var.createDate}"
+                                              rendered="false">
+                                        <h:outputText value="#{var.createDate}">
+                                            <f:convertDateTime pattern="dd MMM yyyy"/>
+                                        </h:outputText>
+                                    </p:column>
+
+
+                                    <p:column width="145">
+                                        <center>
+                                            <p:commandButton
+                                                    rendered="#{var.status eq ApprovalStatusEnum.EndDateExpired}"
+                                                    action="#{institutionUI.updateExpiredInst()}"
+                                                    onstart="PF('loading').show()"
+                                                    oncomplete="PF('loading').hide()"
+                                                    class="btn btn-block btn-xs" icon="fa fa-times"
+                                                    styleClass="amber-btn"
+                                                    title="Update Status To Expired" process="@this"
+                                                    update="mainForm">
+                                                <p:confirm header="Confirm"
+                                                           message="This action will set the status to Expired, Are you sure you want update the status?"
+                                                           icon="ui-icon-warning"/>
+                                                <f:setPropertyActionListener value="#{var}"
+                                                                             target="#{institutionUI.institution}"/>
+                                            </p:commandButton>
+                                            <p:spacer width="5"/>
+                                            <p:commandButton
+                                                    rendered="#{var.status eq ApprovalStatusEnum.Expired or var.status eq ApprovalStatusEnum.EndDateExpired}"
+                                                    action="#{institutionUI.prepareUpdate()}"
+                                                    onstart="PF('loading').show()"
+                                                    oncomplete="PF('loading').hide()"
+                                                    class="btn btn-block btn-xs"
+                                                    styleClass="green-btn"
+                                                    icon="fa fa-calendar-plus-o"
+                                                    title="Update Accreditation Start Date" process="@this"
+                                                    update="mainForm">
+                                                <f:setPropertyActionListener value="#{var}"
+                                                                             target="#{institutionUI.institution}"/>
+                                            </p:commandButton>
+                                            <p:spacer width="5"/>
+                                            <p:commandButton
+                                                    rendered="#{var.status eq ApprovalStatusEnum.Rejected}"
+                                                    onstart="PF('loading').show()"
+                                                    oncomplete="PF('loading').hide();PF('rejectDialog').show()"
+                                                    class="btn amber-btn btn-xs"
+                                                    actionListener="#{institutionUI.prepareRejectReasons(var)}"
+                                                    icon="fa fa-search-plus" title="View Reject Reason" process="@this"
+                                                    update="rejectDialog rejectReasonForm">
+                                                <f:setPropertyActionListener value="#{var}"
+                                                                             target="#{institutionUI.institution}"/>
+                                            </p:commandButton>
+                                            <p:spacer width="5"/>
+                                            <p:commandButton
+                                                    rendered="#{var.status eq ApprovalStatusEnum.Approved or var.status eq ApprovalStatusEnum.Rejected}"
+                                                    onstart="PF('loading').show()"
+                                                    oncomplete="PF('loading').hide()"
+                                                    class="btn btn-block btn-xs"
+                                                    action="#{institutionUI.prepareUpdate()}"
+                                                    icon="fa fa-database" title="Update" process="@this"
+                                                    update="mainForm">
+                                                <f:setPropertyActionListener value="#{var}"
+                                                                             target="#{institutionUI.institution}"/>
+                                            </p:commandButton>
+
+                                            <p:spacer width="5"/>
+                                            <p:commandButton onstart="PF('loading').show()"
+                                                             oncomplete="PF('loading').hide()"
+                                                             class="btn btn-block btn-warning btn-xs" update="mainForm"
+                                                             icon="fa fa-trash-o" title="Delete" process="@this"
+                                                             styleClass="red-btn"
+                                                             action="#{institutionUI.deleteInstitution}">
+                                                <p:confirm header="Confirm"
+                                                           message="Are you sure you want to delete this institution?"
+                                                           icon="ui-icon-warning"/>
+                                                <f:setPropertyActionListener value="#{var}"
+                                                                             target="#{institutionUI.institution}"/>
+                                            </p:commandButton>
+                                        </center>
+                                    </p:column>
+
+                                </p:dataTable>
+                            </p:panelGrid>
+                        </h:form>
+                    </div>
+
+                </h:form>
+            </div>
+        </div>
+
+
+        <p:dialog widgetVar="courseAddressDialog" hideEffect="clip"
+                  header="Selected Address"
+                  showEffect="clip" id="courseAddressDialog" appendTo="@(body)"
+                  modal="true" closable="true" width="80%" height="50%"
+                  responsive="true" position="top" closeOnEscape="true">
+
+            <ui:include src="./includes/address_details_display.xhtml">
+                <ui:param name="addressList"
+                          value="#{institutionUI.course.addressList}"/>
+            </ui:include>
+
+        </p:dialog>
+
+        <p:dialog widgetVar="mapDialog" hideEffect="clip" showEffect="clip"
+                  id="mapDialog" appendTo="@(body)" modal="true" closable="true"
+                  width="50%" height="70%" responsive="true" closeOnEscape="true">
+            <f:facet name="header">
+                <h4 class="box-title">Select Location</h4>
+            </f:facet>
+
+            <h:form id="mapForm" prependId="false">
+
+                <p:gmap widgetVar="map" rendered="true" id="map"
+                        center="-26.205072,28.046915" zoom="15" type="ROADMAP"
+                        style="width:100%;height:400px">
+                    <p:ajax event="pointSelect" oncomplete="PF('mapDialog').hide()"
+                            listener="#{institutionUI.onPointSelect}"/>
+                </p:gmap>
+
+                <script type="text/javascript">
+                    if (navigator.geolocation) {
+                        checkGeolocationByHTML5();
+                    } else {
+                        checkGeolocationByLoaderAPI(); // HTML5 not supported! Fall back to Loader API.
+                    }
+
+                    function checkGeolocationByHTML5() {
+                        navigator.geolocation.getCurrentPosition(function (position) {
+                            setMapCenter(position.coords.latitude, position.coords.longitude);
+                        }, function () {
+                            checkGeolocationByLoaderAPI(); // Error! Fall back to Loader API.
+                        });
+                    }
+
+                    function checkGeolocationByLoaderAPI() {
+                        if (google.loader.ClientLocation) {
+                            setMapCenter(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude);
+                        } else {
+                            // Unsupported! Show error/warning?
+                        }
+                    }
+
+                    function setMapCenter(latitude, longitude) {
+                        PF('map').getMap().setCenter(new google.maps.LatLng(latitude, longitude));
+                    }
+                </script>
+            </h:form>
+
+            <p:ajax event="close" update="mainForm"/>
+        </p:dialog>
+
+
+        <p:dialog widgetVar="rejectDialog" hideEffect="clip"
+                  header="Reject Reason"
+                  showEffect="clip" id="rejectDialog" appendTo="@(body)"
+                  modal="true" closable="true" width="50%" minHeight="50" height="50%"
+                  responsive="true" position="top" closeOnEscape="true">
+
+            <h:form id="rejectReasonForm">
+                <div class="ui-fluid">
+                    <div class="ui-g">
+                        <div class="ui-g-12">
+                            <p:scrollPanel style="width:100%;height:420px">
+                                <p:dataList value="#{institutionUI.rejectReasonList}" var="var" type="ordered">
+                                    <h:outputText value="#{var.description}"/>
+                                    <br/>
+                                    <h:outputText style="color:gray" value="#{var.detailInfo}"/>
+                                    <br/>
+                                </p:dataList>
+                            </p:scrollPanel>
+                        </div>
+                    </div>
+                </div>
+            </h:form>
+        </p:dialog>
+
+    </ui:define>
+
+</ui:composition>

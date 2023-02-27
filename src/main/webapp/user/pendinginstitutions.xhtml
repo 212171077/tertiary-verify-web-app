@@ -1,0 +1,230 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Pending Institutions</ui:define>
+
+    <ui:define name="content">
+        <p:importEnum type="com.pc.entities.enums.ApprovalStatusEnum"/>
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <h:form id="mainForm">
+                    <div class="card">
+                        <h3 class="box-title">
+                            <i class="fa fa-university"></i> Pending Approval Institution(s)
+                        </h3>
+
+                        <h:form id="tableForm">
+                            <p:panelGrid columns="1" layout="grid">
+
+                                <p:dataTable var="var" value="#{institutionUI.pendingApprovalDataModel}"
+                                             id="intitutionList" rowKey="#{var.id}" paginator="true"
+                                             rows="5" paginatorPosition="bottom"
+                                             paginatorTemplate="Page {CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                             rowsPerPageTemplate="5,10,15,20,25,30,35,40,45,50,55,60,65,75,100"
+                                             reflow="true" lazy="true">
+
+                                    <f:facet name="header">
+                                        <h:outputText value="Pending Institution List"/>
+                                    </f:facet>
+
+                                    <p:column headerText="Name of Institution"
+                                              filterBy="#{var.institutionName}"
+                                              sortBy="#{var.institutionName}">
+                                        <h:outputText value="#{var.institutionName}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Accreditation Number"
+                                              filterBy="#{var.accreditationNumber}"
+                                              sortBy="#{var.accreditationNumber}">
+                                        <h:outputText value="#{var.accreditationNumber}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Institution Type"
+                                              sortBy="#{var.institutionType.description}">
+                                        <h:outputText value="#{var.institutionType.description}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Contact Number"
+                                              sortBy="#{var.contactNumber}">
+                                        <h:outputText value="#{var.contactNumber}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Alternative Contact Number"
+                                              sortBy="#{var.alternativeContactNumber}">
+                                        <h:outputText value="#{var.alternativeContactNumber}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Email Address" sortBy="#{var.email}">
+                                        <h:outputText value="#{var.email}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Accreditation Start Date" rendered="false"
+                                              sortBy="#{var.accreditationStartDate}">
+                                        <h:outputText value="#{var.accreditationStartDate}">
+                                            <f:convertDateTime pattern="dd MMM yyyy"/>
+                                        </h:outputText>
+                                    </p:column>
+
+                                    <p:column headerText="Accreditation End Date" rendered="false"
+                                              sortBy="#{var.accreditationEndDate}">
+                                        <h:outputText value="#{var.accreditationEndDate}">
+                                            <f:convertDateTime pattern="dd MMM yyyy"/>
+                                        </h:outputText>
+                                    </p:column>
+
+                                    <p:column headerText="Status" sortBy="#{var.status}">
+                                        <h:outputText value="#{var.status.friendlyName}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Date Created" sortBy="#{var.createDate}"
+                                              rendered="false">
+                                        <h:outputText value="#{var.createDate}">
+                                            <f:convertDateTime pattern="dd MMM yyyy"/>
+                                        </h:outputText>
+                                    </p:column>
+
+
+                                    <p:column width="45">
+                                        <center>
+                                            <p:commandButton
+                                                    onstart="PF('loading').show()"
+                                                    oncomplete="PF('loading').hide()"
+                                                    class="btn btn-block btn-xs"
+                                                    action="#{institutionUI.prepareUpdate()}"
+                                                    icon="fa fa-database" title="Update" process="@this"
+                                                    update="detailForm">
+                                                <f:setPropertyActionListener value="#{var}"
+                                                                             target="#{institutionUI.institution}"/>
+                                            </p:commandButton>
+                                        </center>
+                                    </p:column>
+
+                                </p:dataTable>
+                            </p:panelGrid>
+                        </h:form>
+                    </div>
+                </h:form>
+
+                <h:form id="detailForm">
+                    <p:panelGrid columns="1" rendered="#{institutionUI.institution.id ne null}" style="width: 100%">
+                        <f:facet name="header">
+                            <p:outputLabel value="Institution Details"/>
+                        </f:facet>
+                        <p:tabView>
+                            <p:tab title="Institution">
+                                <h:panelGrid columns="1" cellpadding="10" style="width: 100%">
+                                    <h:panelGroup style="width: 100%">
+                                        <ui:include src="./includes/institution_details_display.xhtml">
+                                            <ui:param name="institution" value="#{institutionUI.institution}"/>
+                                        </ui:include>
+                                    </h:panelGroup>
+                                    <h:panelGroup style="width: 100%">
+                                        <ui:include src="./includes/address_details_display.xhtml">
+                                            <ui:param name="addressList"
+                                                      value="#{institutionUI.institution.addressList}"/>
+                                        </ui:include>
+                                    </h:panelGroup>
+                                </h:panelGrid>
+                            </p:tab>
+                            <p:tab title="Course(s) Details">
+                                <h:panelGrid columns="2" cellpadding="10" style="width: 100%">
+                                    <ui:include src="./includes/course_details_display.xhtml">
+                                        <ui:param name="courseList" value="#{institutionUI.courseList}"/>
+                                    </ui:include>
+                                </h:panelGrid>
+                            </p:tab>
+                            <p:tab title="QR Code" rendered="false">
+                                <!--QR CODE NOT IN USE-->
+                                <h:panelGrid columns="2" cellpadding="10" style="width: 100%">
+                                    <ui:include src="./includes/qr_code_details_display.xhtml">
+                                        <ui:param name="qrCode" value="#{institutionUI.institution.qrCode}"/>
+                                    </ui:include>
+                                </h:panelGrid>
+                            </p:tab>
+                        </p:tabView>
+
+                        <p:panelGrid columns="3" style="width: 100%">
+                            <h:panelGroup>
+                                <p:commandButton
+                                        onstart="PF('loading').show()"
+                                        oncomplete="PF('loading').hide()"
+                                        value="Approve" icon="fa fa-check-square-o"
+                                        class="btn green-btn" update="@form mainForm"
+                                        action="#{institutionUI.approveInstitution()}"/>
+
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+                                <p:commandButton
+                                        onstart="PF('loading').show()"
+                                        oncomplete="PF('loading').hide();PF('rejectDialog').show()"
+                                        value="Reject" icon="fa fa-times"
+                                        actionListener="#{rejectReasonUI.prepareRejectReasonList()}"
+                                        class="btn red-btn" update="rejectDialog"/>
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+                                <p:commandButton
+                                        onstart="PF('loading').show()"
+                                        oncomplete="PF('loading').hide()"
+                                        value="Clear" icon="fa fa-recycle"
+                                        class="btn orange-btn" update="@form"
+                                        actionListener="#{institutionUI.reset()}"/>
+
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </p:panelGrid>
+
+                </h:form>
+            </div>
+        </div>
+
+        <p:dialog widgetVar="rejectDialog" hideEffect="clip"
+                  header="Reject Reason"
+                  showEffect="clip" id="rejectDialog" appendTo="@(body)"
+                  modal="true" closable="true" width="50%" height="50%"
+                  responsive="true" position="top" closeOnEscape="true">
+
+            <h:form id="rejectReasonForm">
+                <div class="ui-fluid">
+                    <div class="ui-g">
+                        <div class="ui-g-12">
+                            <p:outputLabel value="Select Reject Reason(s)"></p:outputLabel>
+                            <p:selectManyMenu value="#{institutionUI.rejectReasonList}"
+                                              converter="#{rejectReasonsConvertor}" scrollHeight="400"
+                                              style="width:100%" required="true" var="t"
+                                              requiredMessage="Please select a reject reason"
+                                              showCheckbox="true">
+                                <f:selectItems value="#{rejectReasonUI.rejectReasonList}" var="rv"
+                                               itemValue="#{rv}"/>
+
+                                <p:column>
+                                    <h:outputText value="#{t.description}"/>
+                                    <br/>
+                                    <h:outputText style="color:gray" value="#{t.detailInfo}"/>
+                                </p:column>
+
+                            </p:selectManyMenu>
+                        </div>
+                    </div>
+                    <p:panelGrid class="list-group-item" style="width:100%"
+                                 columns="1" layout="grid">
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:commandButton onstart="PF('loading').show()"
+                                             oncomplete="PF('loading').hide()"
+                                             class="btn red-btn"
+                                             update="mainForm detailForm"
+                                             value="Reject"
+                                             action="#{institutionUI.rejectInstitution()}">
+                            </p:commandButton>
+                        </h:panelGroup>
+                    </p:panelGrid>
+                </div>
+            </h:form>
+        </p:dialog>
+    </ui:define>
+
+</ui:composition>

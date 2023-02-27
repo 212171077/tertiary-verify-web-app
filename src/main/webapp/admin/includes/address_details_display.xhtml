@@ -1,0 +1,102 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:dataTable var="var" value="#{addressList}"
+                 style="width: 100%"
+                 reflow="true" rows="5"
+                 paginatorPosition="bottom"
+                 paginator="true">
+
+        <f:facet name="header">
+            <h:outputText value="Address List"/>
+        </f:facet>
+
+        <p:column headerText="Address Line 1"
+                  sortBy="#{var.addressLine1}">
+            <h:outputText value="#{var.addressLine1}"/>
+        </p:column>
+
+        <p:column headerText="Address Line 2"
+                  sortBy="#{var.addressLine2}">
+            <h:outputText value="#{var.addressLine2}"/>
+        </p:column>
+
+        <p:column headerText="Province"
+                  sortBy="#{var.province.description}">
+            <h:outputText value="#{var.province.description}"/>
+        </p:column>
+
+        <p:column headerText="City/Town"
+                  sortBy="#{var.city.description}">
+            <h:outputText value="#{var.city.description}"/>
+        </p:column>
+
+        <p:column headerText="Latitude" rendered="false">
+            <h:outputText value="#{var.latitude}"/>
+        </p:column>
+
+        <p:column headerText="Longitude" rendered="false">
+            <h:outputText value="#{var.longitude}"/>
+        </p:column>
+
+        <p:column width="45" rendered="false">
+            <p:commandButton
+                    class="btn btn-block btn-xs"
+                    update="#{form eq null ? '@form' : from}"
+                    icon="fa fa-search-plus" title="View Details" process="@this"
+                    onstart="PF('loading').show()"
+                    oncomplete="PF('loading').hide();PF('addrDetailsDialog').show()"
+                    action="#{addressUI.prepareMapModel}">
+
+                <f:setPropertyActionListener value="#{var}"
+                                             target="#{addressUI.address}"/>
+
+            </p:commandButton>
+        </p:column>
+
+    </p:dataTable>
+
+
+    <p:dialog widgetVar="addrDetailsDialog" hideEffect="clip"
+              header="Address Details"
+              showEffect="clip" id="addrDetailsDialog" appendTo="@(body)"
+              modal="true" closable="true" width="70%" height="60%"
+              responsive="true" position="top" closeOnEscape="true">
+
+
+        <p:fieldset rendered="#{addressUI.address.id ne null}">
+            <p:panelGrid columns="2" layout="grid" style="margin-bottom:20px">
+                <h:outputText value="Address line 1"/>
+                <h:outputText value=": #{addressUI.address.addressLine1}"/>
+
+                <h:outputText value="Address line 2"/>
+                <h:outputText value=": #{addressUI.address.addressLine2}"/>
+
+                <h:outputText value="City/Town"/>
+                <h:outputText value=": #{addressUI.address.addressLine3}"/>
+
+                <h:outputText value="Province"/>
+                <h:outputText value=": #{addressUI.address.province.description}"/>
+            </p:panelGrid>
+
+            <p:fieldset id="mapFS" styleClass="margin" rendered="false">
+                <!--NOT IN USE-->
+                <!--rendered="#{addressUI.showMap}"-->
+                <h:panelGrid id="mapPG" style="width:100%">
+                    <h:form prependId="false">
+                        <p:gmap id="gmap"
+                                center="#{addressUI.address.getLatitude()},#{addressUI.address.getLongitude()}"
+                                zoom="15" type="STREET" style="width:100%;height:400px"
+                                model="#{addressUI.circleModel}">
+                            <p:ajax event="overlaySelect"
+                                    listener="#{addressUI.onCircleSelect}"/>
+                        </p:gmap>
+                    </h:form>
+                </h:panelGrid>
+            </p:fieldset>
+        </p:fieldset>
+
+    </p:dialog>
+
+</ui:composition>

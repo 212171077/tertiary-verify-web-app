@@ -1,0 +1,35 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags">
+
+    <div class="pre-header" style="background-color: white">
+        <p:graphicImage rendered="true" class="nav-logo" name="images/het.png"
+                        library="barcelona-layout"/>
+    </div>
+
+    <div class="pre-header" style="height: 55px">
+        <div class="pre-header-content">
+            <p:graphicImage rendered="false" class="nav-logo" name="images/het.png"
+                            library="barcelona-layout"/>
+
+            <a id="menu-button" href="#"> <span class="fa fa-bars"></span>
+            </a>
+
+            <ul id="menu" class="animated" style="align-items: center">
+                <li><a href="#{request.contextPath}/home.xhtml">HOME</a></li>
+                <li><a href="#{request.contextPath}/reporttodhet.xhtml">REPORT INSTITUTION</a></li>
+                <li><a href="#{request.contextPath}/institutionreportstatus.xhtml">CHECK STATUS</a></li>
+                <li><a href="#{request.contextPath}/contactus.xhtml">CONTACT US</a></li>
+                <li><a href="#{request.contextPath}/newsandevents.xhtml">NEWS &amp; EVENTS</a></li>
+                <sec:authorize access="!hasRole('ROLE_USER')">
+                    <li><a href="#{request.contextPath}/login.xhtml">LOGIN</a></li>
+                </sec:authorize>
+                <sec:authorize access="hasRole('ROLE_USER')">
+                    <li><a href="#{request.contextPath}/logout">LOGOUT</a></li>
+                </sec:authorize>
+            </ul>
+        </div>
+    </div>
+
+</ui:composition>

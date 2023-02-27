@@ -1,0 +1,13 @@
+/target/*
+/target/
+/.settings
+/.classpath
+/.factorypath
+/.project
+.idea/modules.xml
+.idea/misc.xml
+.idea/encodings.xml
+.idea/compiler.xml
+.idea/.name
+.idea/vcs.xml
+/.idea/

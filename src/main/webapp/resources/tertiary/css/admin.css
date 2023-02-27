@@ -1,0 +1,22 @@
+.quick-links {
+    padding: 20px;
+}
+
+.quick-links-header td {
+    border: 2px solid purple;
+    padding: 5px;
+    width: 160px;
+    border-radius: 30px !important;
+    text-align: center;
+}
+
+.admin-welcome-title {
+    margin-top: 20px;
+    font-weight: bold;
+    text-shadow: 2px 2px 2px purple;
+}
+
+img.admin-image {
+    height: 320px;
+    margin-top: 30px;
+}

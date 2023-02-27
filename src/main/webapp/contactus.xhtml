@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <f:facet name="first">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <meta name="viewport"
+              content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+    </f:facet>
+    <title>contact us</title>
+    <script type="text/javascript">
+        $(function () {
+            var menu = $('#menu');
+
+            $('#menu-button').on('click', function (e) {
+                if (menu.hasClass('lmenu-active')) {
+                    menu.addClass('fadeOutUp');
+
+                    setTimeout(function () {
+                        menu.removeClass('fadeOutUp fadeInDown lmenu-active');
+                    }, 500);
+                } else {
+                    menu.addClass('lmenu-active fadeInDown');
+                }
+                e.preventDefault();
+            });
+
+            menu.find('a').on('click', function () {
+                menu.removeClass('fadeOutUp fadeInDown lmenu-active');
+            });
+        });
+    </script>
+</h:head>
+
+<h:body styleClass="landing-body">
+    <div id="home" class="landing-wrapper">
+        <div id="header">
+
+            <ui:include src="/link_include.xhtml"/>
+
+            <h:form id="mainForm">
+
+                <div style="margin-top: 15px">
+                    <!-- Add background image class="header-content" -->
+                    <div class="search-box report-inst-center">
+                        <p style="color: white; font-size: 25px;margin-top: 10px;margin-bottom: 10px;text-align: center">CONTACT US</p>
+                        <div class="ui-g ui-fluid">
+                            <div class="ui-g-12 ui-lg-12">
+                                <p style="color: white;text-align: center">
+                                    Getting in touch is easy! Your questions,suggestions and comments are important to us, let us know your thoughts...
+                                </p>
+
+                                <p:fieldset>
+                                    <br/>
+                                    <p:panelGrid columns="3" layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group">
+
+                                        <h:panelGroup>
+                                            <p:outputLabel value="Full Name" for="fullName"/>
+                                            <p:inputText id="fullName" value="#{contactUsUI.contactUs.fullName}"
+                                                         style="width:100%" required="true"
+                                                         requiredMessage="Please enter full name"/>
+
+                                        </h:panelGroup>
+
+
+                                        <h:panelGroup>
+                                            <p:outputLabel value="Email Address" for="email"/>
+                                            <p:inputText type="email"
+                                                         value="#{contactUsUI.contactUs.email}"
+                                                         validatorMessage="Please enter a valid email address"
+                                                         id="email" style="width:100%" required="true"
+                                                         requiredMessage="Please enter your email">
+                                                <p:ajax/>
+                                                <f:validateRegex pattern="#{commonUI.EMAIL_FORMAT}"/>
+                                            </p:inputText>
+                                        </h:panelGroup>
+
+                                        <h:panelGroup>
+                                            <p:outputLabel value="Cell Number" for="phoneNumber"/>
+                                            <p:inputMask mask="#{commonUI.CELLPHONE_FORMAT}"
+                                                         value="#{contactUsUI.contactUs.phoneNumber}"
+                                                         id="phoneNumber" style="width:100%" required="true"
+                                                         requiredMessage="Please enter cell numbere">
+                                                <p:ajax/>
+                                            </p:inputMask>
+                                        </h:panelGroup>
+
+                                    </p:panelGrid>
+
+                                    <p:panelGrid columns="1" layout="grid" style="margin-top: 0px"
+                                                 styleClass="ui-panelgrid-blank form-group">
+
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:outputLabel value="Message"/>
+                                            <br/>
+                                            <p:textEditor widgetVar="message"
+                                                          value="#{contactUsUI.contactUs.message}"
+                                                          height="100" style="margin-bottom:10px"
+                                                          placeholder="Please enter message">
+                                                <f:facet name="toolbar">
+                                                         <span class="ql-formats">
+                                                            <button class="ql-bold"></button>
+                                                            <button class="ql-italic"></button>
+                                                            <button class="ql-underline"></button>
+                                                            <button class="ql-strike"></button>
+                                                        </span>
+                                                    <span class="ql-formats">
+                                                            <select class="ql-font"></select>
+                                                            <select class="ql-size"></select>
+                                                        </span>
+                                                </f:facet>
+                                            </p:textEditor>
+                                        </h:panelGroup>
+
+                                    </p:panelGrid>
+
+                                    <p:panelGrid columns="2" layout="grid" style="margin: 0px"
+                                                 styleClass="ui-panelgrid-blank form-group">
+                                        <h:panelGroup class="ui-inputgroup">
+                                            <p:commandButton onstart="PF('loading').show()"
+                                                             oncomplete="PF('loading').hide()"
+                                                             value="Submit" icon="fa fa-save"
+                                                             class="btn btn-primary"
+                                                             update="@form"
+                                                             actionListener="#{contactUsUI.saveContactUs}"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup class="ui-inputgroup">
+                                            <p:commandButton value="Clear" process="@this" icon="fa fa-recycle"
+                                                             class="btn orange-btn"
+                                                             update="@form" actionListener="#{contactUsUI.reset}"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+
+                                </p:fieldset>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+                <ui:include src="/common_dialog.xhtml"/>
+
+            </h:form>
+        </div>
+
+        <ui:include src="/home_footer_include.xhtml"/>
+    </div>
+
+
+</h:body>
+
+</html>

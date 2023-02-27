@@ -1,0 +1,89 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:form id="addrDetailsForm">
+        <p:dataTable var="var" value="#{addressList}"
+                     style="width: 100%"
+                     reflow="true" rows="5"
+                     paginatorPosition="bottom"
+                     paginator="true">
+
+            <f:facet name="header">
+                <h:outputText value="Address List"/>
+            </f:facet>
+
+            <p:column headerText="Address Line 1"
+                      sortBy="#{var.addressLine1}">
+                <h:outputText value="#{var.addressLine1}"/>
+            </p:column>
+
+            <p:column headerText="Address Line 2"
+                      sortBy="#{var.addressLine2}">
+                <h:outputText value="#{var.addressLine2}"/>
+            </p:column>
+
+            <p:column headerText="Province"
+                      sortBy="#{var.province.description}">
+                <h:outputText value="#{var.province.description}"/>
+            </p:column>
+
+            <p:column headerText="City/Town"
+                      sortBy="#{var.city.description}">
+                <h:outputText value="#{var.city.description}"/>
+            </p:column>
+
+            <p:column headerText="Examination Centre Number"
+                      sortBy="#{var.examinationNumber}">
+                <h:outputText value="#{var.examinationNumber}"/>
+            </p:column>
+
+            <p:column headerText="Latitude" rendered="false">
+                <h:outputText value="#{var.latitude}"/>
+            </p:column>
+
+            <p:column headerText="Longitude" rendered="false">
+                <h:outputText value="#{var.longitude}"/>
+            </p:column>
+
+            <p:column width="45" rendered="false">
+                <!--NOT IN USE-->
+                <p:commandButton rendered="#{var.latitude ne null and var.longitude ne null}"
+                        class="btn btn-block btn-xs"
+                        update="@form"
+                        icon="fa fa-map-marker" title="View Details" process="@this"
+                        onstart="PF('loading').show()"
+                        oncomplete="PF('loading').hide()"
+                        action="#{addressUI.prepareMapModel}">
+
+                    <f:setPropertyActionListener value="#{var}"
+                                                 target="#{addressUI.address}"/>
+
+                </p:commandButton>
+            </p:column>
+
+        </p:dataTable>
+
+        <h:panelGroup rendered="false">
+            <!--NOT IN USE-->
+           <!-- rendered="#{addressUI.address.id ne null}"-->
+            <br/>
+            <br/>
+            <p:fieldset id="mapFS" styleClass="margin"
+                        rendered="#{addressUI.showMap}">
+                <h:panelGrid id="mapPG" style="width:100%">
+                    <h:form prependId="false">
+                        <p:gmap id="gmap"
+                                center="#{addressUI.address.getLatitude()},#{addressUI.address.getLongitude()}"
+                                zoom="15" type="STREET" style="width:100%;height:300px"
+                                model="#{addressUI.circleModel}">
+                            <p:ajax event="overlaySelect"
+                                    listener="#{addressUI.onCircleSelect}"/>
+                        </p:gmap>
+                    </h:form>
+                </h:panelGrid>
+            </p:fieldset>
+        </h:panelGroup>
+
+    </h:form>
+</ui:composition>

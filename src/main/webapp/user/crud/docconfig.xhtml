@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:sec="http://www.springframework.org/security/tags"> 
+<h:head></h:head> 
+<body>
+	<ui:composition template="/WEB-INF/template/commonLayout.xhtml">
+		 <p:importEnum type="com.pc.entity.enums.YesNoEnum" />
+		<ui:define name="content">
+			 <!-- Main content -->
+		    <section class="content">
+		    		<h:form id="mainForm">
+			    		<div class="box box-default color-palette-box">
+							<div class="box-header with-border">
+								
+								<!-- This is used to as display name on the lookups.xhtml -->
+								<!--  <displayName>DocConfig</displayName> -->
+								 <h3 class="box-title"><i class="fa fa-th"></i> DocConfig</h3>
+							 </div>
+							     <div class="box box-default color-palette-box">
+								 	   <div class="box-body">
+								 	   		<p:panelGrid  class="list-group-item" style="width:100%" columns="2" layout="grid" >
+									              
+									              	  														<h:panelGroup styleClass="md-inputfield">
+														    <p:outputLabel value="level" for="level" />
+														    <p:inputText  id="level" value="#{docConfigUI.docConfig.level}"  style="width:100%" required="true" requiredMessage="Please enter level"/>
+														</h:panelGroup>
+
+  														<h:panelGroup styleClass="md-inputfield">
+														    <p:outputLabel value="description" for="description" />
+														    <p:inputText  id="description" value="#{docConfigUI.docConfig.description}"  style="width:100%" required="true" requiredMessage="Please enter description"/>
+														</h:panelGroup>
+
+  														<h:panelGroup styleClass="md-inputfield">
+														    <p:outputLabel value="workflowRole" for="workflowRole" />
+														    <p:inputText  id="workflowRole" value="#{docConfigUI.docConfig.workflowRole}"  style="width:100%" required="true" requiredMessage="Please enter workflowRole"/>
+														</h:panelGroup>
+
+  														<h:panelGroup styleClass="md-inputfield">
+														    <p:outputLabel value="required" for="required" />
+														    <p:inputText  id="required" value="#{docConfigUI.docConfig.required}"  style="width:100%" required="true" requiredMessage="Please enter required"/>
+														</h:panelGroup>
+
+  														<h:panelGroup styleClass="md-inputfield">
+														    <p:outputLabel value="workflow" for="workflow" />
+														    <p:inputText  id="workflow" value="#{docConfigUI.docConfig.workflow}"  style="width:100%" required="true" requiredMessage="Please enter workflow"/>
+														</h:panelGroup>
+
+
+								                     
+								                    <h:panelGroup styleClass="md-inputfield">
+								                    	<br/>
+								                       <p:commandButton onstart="PF('loading').show()" oncomplete="PF('loading').hide()" value="Submit" icon="fa fa-save" class="btn btn-primary" update="@form tableForm" actionListener="#{docConfigUI.saveDocConfig}"/>
+						                     			<p:spacer width="10"/>
+						                     			<p:commandButton value="Clear" icon="fa fa-recycle" class="btn btn-warning" update="@form" actionListener="#{docConfigUI.reset}"/>
+						                    		</h:panelGroup>
+						                     
+						                     </p:panelGrid>
+								 	   </div>
+					   			 </div>
+					   			 
+					   			 
+					   		 <div class="box box-default color-palette-box">
+							      <h:form id="tableForm">
+								    <p:panelGrid columns="1" layout="grid" >
+								    	<p:dataTable var="var" value="#{docConfigUI.docConfigList}" reflow="true" rows="5" paginatorPosition="bottom" paginator="true">
+										    
+										    <f:facet name="header">
+										           <h:outputText value="DocConfig List" />
+										    </f:facet>
+										    
+										    											<p:column headerText="level"  sortBy="#{var.level}">
+											    <h:outputText value="#{var.level}"/>
+											 </p:column>
+
+ 											<p:column headerText="description"  sortBy="#{var.description}">
+											    <h:outputText value="#{var.description}"/>
+											 </p:column>
+
+ 											<p:column headerText="workflowRole"  sortBy="#{var.workflowRole}">
+											    <h:outputText value="#{var.workflowRole}"/>
+											 </p:column>
+
+ 											<p:column headerText="required"  sortBy="#{var.required}">
+											    <h:outputText value="#{var.required}"/>
+											 </p:column>
+
+ 											<p:column headerText="workflow"  sortBy="#{var.workflow}">
+											    <h:outputText value="#{var.workflow}"/>
+											 </p:column>
+
+
+										    
+										    <p:column headerText="Date Created"  sortBy="#{var.createDate}">
+										        <h:outputText value="#{var.createDate}">
+										        	<f:convertDateTime pattern="dd MMM yyyy" />
+										        </h:outputText>
+										    </p:column>
+										 
+										 
+										    
+										    <p:column width="90">
+												<p:commandButton class="btn btn-block btn-info btn-xs"  icon="fa fa-database" title="Update" process="@this" update="mainForm">
+													<f:setPropertyActionListener value="#{var}" target="#{docConfigUI.docConfig}" />
+												</p:commandButton>
+												<p:spacer width="5" />
+												<p:commandButton onstart="PF('loading').show()" oncomplete="PF('loading').hide()" class="btn btn-block btn-warning btn-xs" update="mainForm"  icon="fa fa-trash-o" title="Delete" process="@this"  action="#{docConfigUI.deleteDocConfig}">
+													<p:confirm header="Confirm" message="Are you sure you want to delete this docConfig?" icon="ui-icon-warning" />
+													<f:setPropertyActionListener value="#{var}" target="#{docConfigUI.docConfig}" />
+												</p:commandButton>
+											</p:column>
+										 
+										</p:dataTable>
+									</p:panelGrid>
+									</h:form>
+							    </div>
+					   		 </div>
+					 </h:form>
+					 
+			</section>
+    	</ui:define>
+    </ui:composition>
+</body> 
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:sec="http://www.springframework.org/security/tags"> 
+<h:head></h:head> 
+<body>
+	<ui:composition template="/WEB-INF/template/commonLayout.xhtml">
+		 <p:importEnum type="com.pc.entity.enums.YesNoEnum" />
+		<ui:define name="content">
+			 <!-- Main content -->
+		    <section class="content">
+		    		<h:form id="mainForm">
+			    		<div class="box box-default color-palette-box">
+							<div class="box-header with-border">
+								 <h3 class="box-title"><i class="fa fa-folder-open"></i> Document Configuration</h3>
+							 </div>
+							     <div class="box box-default color-palette-box">
+								 	   <div class="box-body">
+											    <p:tree   selection="#{docConfigUI.selectedNode}"  
+											    		  style="width:100%" id="treeSingle"  
+											    		  selectionMode="single" dynamic="true"
+											    		  value="#{docConfigUI.root}" 
+											    		  highlight="true"  var="node">
+											       
+											        <p:treeNode  icon="fa fa-folder-open" collapsedIcon="fa fa-folder" expandedIcon="fa fa-folder-open">
+														<h:outputText value="#{node}" />
+													</p:treeNode>
+													
+													<p:treeNode type="Workflow"  icon="fa fa-folder-open" collapsedIcon="fa fa-folder" expandedIcon="fa fa-folder-open">
+											            <h:outputText value="#{node.description} Documents" />
+											        </p:treeNode>
+											        
+											         <p:treeNode type="DocumentLevel"  icon="fa fa-folder-open" collapsedIcon="fa fa-folder" expandedIcon="fa fa-folder-open">
+											            <h:outputText value="#{node.description}" />
+											        </p:treeNode>
+											        
+											         <p:treeNode type="DocConfig"  icon="fa fa-file-text">
+											            <h:outputText value="#{node.description}" />
+											        </p:treeNode>
+											    </p:tree>
+											   
+												 <p:contextMenu for="treeSingle" nodeType="Workflow">
+													<p:menuitem style="color:orange" value="No Option Avaibable" icon="fa fa-trash-o" />
+												</p:contextMenu>
+												
+												<p:contextMenu for="treeSingle" nodeType="DocumentLevel">
+													<p:menuitem value="Add Doc" icon="fa fa-plus" oncomplete="PF('addDocDialog').show()" update="addDocDialog"/>
+												</p:contextMenu>
+												
+												<p:contextMenu for="treeSingle" nodeType="DocConfig">
+													<p:menuitem value="Update Doc" icon="fa fa-edit" actionListener="#{docConfigUI.prepareDocConfigUpdate}" oncomplete="PF('addDocDialog').show()" update="addDocDialog"/>
+													<p:menuitem value="Remove Doc" icon="fa fa-trash-o" actionListener="#{docConfigUI.deleteDocConfig}" update="@form">
+														<p:confirm header="#{lang['confirmation']}" message="Are you sure you want to remove this document?" />
+													</p:menuitem>
+												</p:contextMenu>
+								 	   </div>
+					   			 </div>
+					   		 </div>
+					 </h:form>
+			</section>
+			
+			<p:dialog widgetVar="addDocDialog" hideEffect="clip" showEffect="clip" id="addDocDialog" appendTo="@(body)" modal="true" closable="true" width="40%" height="50%" responsive="true" closeOnEscape="true">
+				<f:facet name="header">
+					  <p class="box-title"><i class="fa fa-cogs"></i> Document Config</p>
+		        </f:facet>
+		        <h:form id="addDocDialogFRM">
+		        	<h:panelGroup styleClass="md-inputfield">
+					    <p:outputLabel value="Description" for="description" />
+					    <p:inputText  id="description" value="#{docConfigUI.docConfig.description}"  style="width:100%" required="true" requiredMessage="Please enter description"/>
+					</h:panelGroup>
+					
+					 <h:panelGroup styleClass="md-inputfield" id="pgWfRoles">
+                          <p:outputLabel value="Workflow Role" />
+                          <p:selectOneMenu  id="wfrole" value="#{docConfigUI.docConfig.workflowRole}" converter="#{workflowRoleConvertor}" style="width:100%" requiredMessage="Select workflow" required="false">
+                              <p:ajax/>
+                              <f:selectItem itemLabel="---Select Workflow Role---" noSelectionOption="true" />
+                              <f:selectItems value="#{docConfigUI.getWorkflowRoles()}" var="rv" itemLabel="#{rv.description}(#{rv.position})" itemValue="#{rv}" />
+                              <p:ajax/>
+                          </p:selectOneMenu>
+                     </h:panelGroup>
+					
+					<h:panelGroup styleClass="md-inputfield">
+						<br/>
+						<p:outputLabel value="Is This Document Required" for="description" /><p:spacer width="10"></p:spacer>
+						<p:selectBooleanCheckbox id="required"  value="#{docConfigUI.docConfig.required}">
+							<p:ajax event="change"/>
+						</p:selectBooleanCheckbox>
+					</h:panelGroup>
+					<br/>
+					<h:panelGroup styleClass="md-inputfield">
+                   		<br/>
+                        <p:commandButton onstart="PF('loading').show()" oncomplete="PF('loading').hide()" value="Submit" icon="fa fa-save" class="btn btn-primary" update="@form" actionListener="#{docConfigUI.saveDocConfig}"/>
+                  			<p:spacer width="10"/>
+                  		<p:commandButton value="Clear" icon="fa fa-recycle" class="btn btn-warning" update="@form" process="@this" actionListener="#{docConfigUI.reset}"/>
+                 	</h:panelGroup>
+		        </h:form>
+		        <p:ajax event="close" update="mainForm" listener="#{docConfigUI.reset}"></p:ajax>
+	        </p:dialog>
+    	</ui:define>
+    </ui:composition>
+</body> 
+</html>

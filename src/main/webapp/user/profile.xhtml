@@ -1,0 +1,158 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">profile</ui:define>
+
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <div class="card">
+                    <h1>My Profile</h1>
+                    <div class="ui-g dashboard">
+                        <h:form id="userDetailsForm">
+                            <div class="ui-g-12 ui-lg-6">
+                                <div class="user-card ui-shadow-content">
+                                    <div class="user-card-header">
+                                        <p:graphicImage name="images/dashboard/user-card-header.png" library="barcelona-layout"/>
+                                    </div>
+                                    <div class="user-card-content">
+                                        <p:graphicImage class="profile-user-img img-responsive img-circle" cache="false"
+                                                        value="#{profileUI.imageFromDB}" id="profileImg" library="barcelona-layout" rendered="true"/>
+                                        <p:commandButton oncomplete="PF('uploadDialog').show()" update="uploadDialog" icon="ui-icon-add-a-photo"
+                                                         process="@this" styleClass="secondary"/>
+
+                                        <div class="user-card-name" style="margin-left: 150px">
+                                            <span>#{profileUI.currentUser.name} #{profileUI.currentUser.surname}</span>
+                                        </div>
+                                        <div class="user-detail">
+                                            <ul>
+                                                <li class="clearfix">
+                                                    <i class="fa fa-id-card"></i>
+                                                    <span class="project-title">ID Number:</span>
+                                                    <span class="project-detail">#{profileUI.currentUser.rsaId}</span>
+                                                </li>
+                                                <li class="clearfix">
+                                                    <i class="fa fa-calendar"></i>
+                                                    <span class="project-title">Date Of Birth:</span>
+                                                    <span class="project-detail">
+						                                 	<h:outputText value="#{profileUI.currentUser.dob}">
+															    <f:convertDateTime pattern="dd MMMM yyyy"/>
+															</h:outputText>
+														</span>
+                                                </li>
+                                                <li class="clearfix">
+                                                    <i class="fa fa-venus-mars"></i>
+                                                    <span class="project-title">Gender:</span>
+                                                    <span class="project-detail">#{profileUI.currentUser.gender.genderName}</span>
+                                                </li>
+                                                <li class="clearfix">
+                                                    <i class="fa fa-unlock"></i>
+                                                    <span class="project-title">Role(s):</span>
+                                                    <p:repeat value="#{profileUI.userRoles}" var="userrole">
+                                                        <span class="label label-success">|-#{userrole.role.description}-|</span>
+                                                    </p:repeat>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-lg-6">
+
+                                <p:fieldset id="fsProfile">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title"><i class="fa fa-edit"></i> Update Profile</h3>
+                                    </div>
+                                    <br/>
+                                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputText value="#{profileUI.currentUser.name}" id="name" style="width:100%" required="true"
+                                                         requiredMessage="Please enter your name"/>
+                                            <p:outputLabel value="Name" for="name"/>
+                                        </h:panelGroup>
+
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputText value="#{profileUI.currentUser.surname}" id="surname" style="width:100%" required="true"
+                                                         requiredMessage="Please enter your surname"/>
+                                            <p:outputLabel value="Surname" for="surname"/>
+                                        </h:panelGroup>
+
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputText value="#{profileUI.currentUser.cellNumber}" id="cell" style="width:100%" required="true"
+                                                         requiredMessage="Please enter cell numbere"/>
+                                            <p:outputLabel value="Cell Number" for="cell"/>
+                                        </h:panelGroup>
+
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputText value="#{profileUI.currentUser.email}" id="email" style="width:100%" required="true"
+                                                         requiredMessage="Please enter email address"/>
+                                            <p:outputLabel value="Email" for="email"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <div class="ui-g-12 button-container">
+                                        <p:commandButton styleClass="flat" value="Update" process="fsProfile" oncomplete="PF('loading').hide()"
+                                                         onstart="PF('loading').show()" style="display:inline-block;margin-top:5px;width:15%"
+                                                         icon="fa fa-database" update="@form pgProfileInfo" actionListener="#{profileUI.updateUser}"/>
+                                    </div>
+                                </p:fieldset>
+                            </div>
+
+                            <div class="ui-g-12 ui-lg-6">
+                                <p:fieldset id="fsPassword">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title"><i class="fa fa-lock"></i> Update Password</h3>
+                                    </div>
+                                    <br/>
+                                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group">
+
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:password value="#{profileUI.password}" id="oldPass" style="width:100%" required="true"
+                                                        requiredMessage="Please enter old password"/>
+                                            <p:outputLabel value="Enter Old Password" for="oldPass"/>
+                                        </h:panelGroup>
+
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:password value="#{profileUI.newPassword}" id="newPass" feedback="true" style="width:100%" inline="true"
+                                                        match="newPass2" required="true" requiredMessage="Please enter new Password"
+                                                        validatorMessage="Passwords do not match"/>
+                                            <p:outputLabel value="Enter New Password" for="newPass"/>
+                                        </h:panelGroup>
+
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:password value="#{profileUI.confirmPassword}" id="newPass2" feedback="true" style="width:100%"
+                                                        inline="true" required="true" requiredMessage="Please enter confirm Password"/>
+                                            <p:outputLabel value="Confirm New Password" for="newPass2"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <div class="ui-g-12 button-container">
+                                        <p:commandButton value="Update" onstart="PF('loading').show()" process="fsPassword"
+                                                         oncomplete="PF('loading').hide()" icon="fa fa-database" update="@form"
+                                                         actionListener="#{profileUI.updateUserPassword}"/>
+                                    </div>
+
+                                </p:fieldset>
+                            </div>
+
+                        </h:form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <p:dialog header="Upload Profile Image" widgetVar="uploadDialog" hideEffect="clip" showEffect="clip" id="uploadDialog" appendTo="@(body)"
+                  modal="true" closable="true" width="60%" height="50%" responsive="true" closeOnEscape="true">
+            <h:form>
+                <p:fileUpload fileUploadListener="#{profileUI.handleFileUpload}" mode="advanced" oncomplete="PF('uploadDialog').hide()"
+                              update="@form userDetailsForm:profileImg toolBarprofileImg" immediate="true" label="Select Profile Image" auto="true"
+                              allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
+            </h:form>
+        </p:dialog>
+
+    </ui:define>
+
+</ui:composition>

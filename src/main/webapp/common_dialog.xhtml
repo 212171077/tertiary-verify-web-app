@@ -1,0 +1,31 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <!-- Global loading Dialog -->
+    <p:dialog resizable="false" draggable="false" minimizable="false" widgetVar="loading" hideEffect="clip"
+              showEffect="clip" id="loading" appendTo="@(body)" modal="true" closable="true" width="15%" height="50%"
+              responsive="true" closeOnEscape="true">
+        <center>
+            <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+            <br/>
+            <br/>
+            Loading, Please Wait...
+        </center>
+    </p:dialog>
+
+    <!-- Global Confirm Dialog -->
+    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+                     width="350">
+        <p:commandButton value="Yes" styleClass="ui-confirmdialog-yes"
+                         icon="ui-icon-check"/>
+        <p:commandButton value="No" styleClass="ui-confirmdialog-no"
+                         type="button" icon="ui-icon-close"/>
+    </p:confirmDialog>
+
+    <!-- Global Growl Message -->
+    <p:growl autoUpdate="true" id="msg" showSummary="false"
+             showDetail="true" sticky="false"></p:growl>
+    <!--   <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" /> -->
+
+</ui:composition>

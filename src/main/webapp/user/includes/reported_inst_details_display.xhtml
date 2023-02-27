@@ -1,0 +1,180 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    
+    <div class="card">
+        <h:form id="investigationForm">
+            <p:panel
+                    rendered="#{reportedInstitutionsUI.reportedInstitutions.id ne null}"
+                    toggleable="true" id="rolePanel" header="Report Details"
+                    styleClass="margin">
+                <p:fieldset legend="Investigation Feedback" collapsed="true"
+                            toggleable="true">
+                    <h:panelGroup>
+                        <p:outputLabel value="Status" style="width:100%"/>
+                        <br/>
+                        <p:selectOneMenu style="width:50%"
+                                         disabled="#{enableUpdate}"
+                                         value="#{reportedInstitutionsUI.reportedInstitutions.status}"
+                                         required="true" requiredMessage="Please select status">
+                            <p:ajax/>
+                            <f:selectItem itemLabel="Select one" noSelectionOption="true"/>
+                            <f:selectItems
+                                    value="#{commonItemUI.reportedInstitutionsStatusDD}" var="rv"
+                                    itemLabel="#{rv.displayName}" itemValue="#{rv}"/>
+                        </p:selectOneMenu>
+                    </h:panelGroup>
+                    <br/>
+                    <br/>
+
+                    <h:panelGroup>
+                        <p:outputLabel value="Investigator Feedback" for="feedback"/>
+                        <br/>
+                        <p:textEditor widgetVar="feedback" id="feedback"
+                                      readonly="#{enableUpdate}"
+                                      value="#{reportedInstitutionsUI.reportedInstitutions.investigatorFeedback}"
+                                      height="300" style="margin-bottom:10px"/>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <p:commandButton rendered="#{enableUpdate}" value="Update" icon="fa fa-save"
+                                         class="btn btn-primary" update="investigationForm tableForm"
+                                         onstart="PF('loading').show()"
+                                         oncomplete="PF('loading').hide()"
+                                         actionListener="#{reportedInstitutionsUI.updateStatus}"/>
+                    </h:panelGroup>
+                </p:fieldset>
+                <br/>
+
+
+                <p:panelGrid columns="1" layout="grid">
+
+                    <p:panelGrid columns="2" layout="grid" style="text-align: left">
+                        <f:facet name="header">
+                            Institutions Details
+                        </f:facet>
+
+
+                        <h:outputText value="Status"/>
+                        <h:outputText
+                                value=": #{reportedInstitutionsUI.reportedInstitutions.status.friendlyName}"/>
+
+                        <h:outputText value="Institution Name"/>
+                        <h:outputText
+                                value=": #{reportedInstitutionsUI.reportedInstitutions.institutionName}"/>
+
+                        <h:outputText value="Report Type"/>
+                        <h:outputText
+                                value=": #{reportedInstitutionsUI.reportedInstitutions.reportType}"/>
+
+                        <h:outputText value="Reference Number"/>
+                        <h:outputText
+                                value=": #{reportedInstitutionsUI.reportedInstitutions.refNumber}"/>
+
+                        <h:outputText value="Alternative Contact Number"/>
+                        <h:outputText value=": #{var.alternativeContactNumber}"/>
+
+                        <h:outputText value="Email Address"/>
+                        <h:outputText value=": #{var.email}"/>
+
+                        <p:spacer height="10"></p:spacer>
+                    </p:panelGrid>
+
+                    <p:panelGrid rendered="#{reportedInstitutionsUI.reportedInstitutions.address ne null}" columns="2"
+                                 layout="grid" style="margin-bottom:5px">
+
+                        <f:facet name="header">
+                            Address Details
+                        </f:facet>
+
+                        <h:outputText value="Address line 1"/>
+                        <h:outputText
+                                value=": #{reportedInstitutionsUI.reportedInstitutions.address.addressLine1}"/>
+
+                        <h:outputText value="Address line 2"/>
+                        <h:outputText
+                                value=": #{reportedInstitutionsUI.reportedInstitutions.address.addressLine2}"/>
+
+                        <h:outputText value="Address line 3"/>
+                        <h:outputText
+                                value=": #{reportedInstitutionsUI.reportedInstitutions.address.addressLine3}"/>
+
+                        <h:outputText value="Province"/>
+                        <h:outputText
+                                value=": #{reportedInstitutionsUI.reportedInstitutions.address.province.description}"/>
+
+                        <h:outputText value="City"/>
+                        <h:outputText
+                                value=": #{reportedInstitutionsUI.reportedInstitutions.address.city.description}"/>
+
+                        <h:outputText value="Suburb/Area"/>
+                        <h:outputText
+                                value=": #{reportedInstitutionsUI.reportedInstitutions.address.suburb}"/>
+
+                        <h:outputText value="Code"/>
+                        <h:outputText
+                                value=": #{reportedInstitutionsUI.reportedInstitutions.address.code}"/>
+                    </p:panelGrid>
+
+                    <h:panelGroup rendered="#{reportedInstitutionsUI.reportedInstitutions.institution ne null}">
+                        <ui:include src="#{includePath}address_details_display.xhtml">
+                            <ui:param name="addressList"
+                                      value="#{reportedInstitutionsUI.reportedInstitutions.institution.addressList}"/>
+                        </ui:include>
+                    </h:panelGroup>
+
+
+                </p:panelGrid>
+                <br/>
+                <p:dataTable
+                        rendered="#{reportedInstitutionsUI.reportedInstitutionCourseList.size() gt 0}"
+                        var="var"
+                        value="#{reportedInstitutionsUI.reportedInstitutionCourseList}"
+                        reflow="true" rows="5" paginatorPosition="bottom"
+                        paginator="true">
+
+                    <f:facet name="header">
+                        <h:outputText value="Reported  Course(s)"/>
+                    </f:facet>
+
+                    <p:column headerText="Course Name">
+                        <h:outputText value="#{var.course.description}"/>
+                        <h:outputText value="#{var.courseDesc}"/>
+                    </p:column>
+
+                    <p:column headerText="Course Type">
+                        <h:outputText value="#{var.course.courseType.description}"/>
+                        <h:outputText value="#{var.courseType}"/>
+                    </p:column>
+
+                    <p:column headerText="Course Level">
+                        <h:outputText value="#{var.course.courseLevel.description}"/>
+                        <h:outputText value="#{var.courseLevel}"/>
+                    </p:column>
+
+                </p:dataTable>
+            </p:panel>
+
+            <p:fieldset id="mapFieldSet" styleClass="margin" rendered="false">
+                <!--MAP DISPLAY NOT IN USE-->
+                <!--rendered="#{reportedInstitutionsUI.showMap}"-->
+                <h:panelGrid id="mapPanelG" style="width:100%">
+                    <h:form prependId="false">
+                        <p:gmap id="map"
+                                center="#{reportedInstitutionsUI.reportedInstitutions.getAddress().getLatitude()},#{reportedInstitutionsUI.reportedInstitutions.getAddress().getLongitude()}"
+                                zoom="15" type="STREET" style="width:100%;height:400px"
+                                model="#{reportedInstitutionsUI.circleModel}">
+                            <p:ajax event="overlaySelect"
+                                    listener="#{reportedInstitutionsUI.onCircleSelect}"/>
+                        </p:gmap>
+                    </h:form>
+                </h:panelGrid>
+            </p:fieldset>
+
+            <br/>
+
+        </h:form>
+    </div>
+
+
+</ui:composition>

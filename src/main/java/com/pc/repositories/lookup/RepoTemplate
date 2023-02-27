@@ -1,0 +1,15 @@
+package com.pc.repositories.lookup;
+
+
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.pc.entities.lookup.####;
+
+@Repository
+public interface ####Repository extends JpaRepository<####, Integer> 
+{
+	
+	public #### findById(Long parseLong);
+}

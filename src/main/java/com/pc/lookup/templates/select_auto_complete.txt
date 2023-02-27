@@ -1,0 +1,38 @@
+
+	@Autowired
+	####Service %%%%Service; 
+	
+	public List<####> autoComplete####(String searchText) 
+	{
+		List<####> list=null;
+		try {
+			if(searchText==null || searchText.isEmpty())
+			{
+				list=%%%%Service.findAll####();
+			}
+			else
+			{
+				list=%%%%Service.findByDescriptionStartingWith(searchText);
+			}
+		} catch (Exception e) {
+			displayErrorMssg(e.getMessage());
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+	
+	 public List<####> getSelectItems####() {
+		
+		List<####> l = null;
+		try {
+			
+			l = %%%%Service.findAll####();
+		
+		} catch (Exception e) {
+			displayErrorMssg(e.getMessage());
+		}
+		return l;
+	}
+	
+	//===============DO NOT REMOVE THIS=================//

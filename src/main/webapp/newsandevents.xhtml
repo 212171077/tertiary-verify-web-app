@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <f:facet name="first">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+    </f:facet>
+    <title>info</title>
+    <h:outputScript name="js/jquery.min_2.1.3.js" library="barcelona-layout"/>
+    <h:outputStylesheet name="css/my_style.css" library="barcelona-layout"/>
+    <script type="text/javascript">
+        $(function () {
+            var menu = $('#menu');
+
+            $('#menu-button').on('click', function (e) {
+                if (menu.hasClass('lmenu-active')) {
+                    menu.addClass('fadeOutUp');
+
+                    setTimeout(function () {
+                        menu.removeClass('fadeOutUp fadeInDown lmenu-active');
+                    }, 500);
+                } else {
+                    menu.addClass('lmenu-active fadeInDown');
+                }
+                e.preventDefault();
+            });
+
+            menu.find('a').on('click', function () {
+                menu.removeClass('fadeOutUp fadeInDown lmenu-active');
+            });
+        });
+
+        $(window).load(function () {
+            $(".post-module").hover(function () {
+                $(this).find(".description").stop().animate(
+                    {
+                        height: "toggle",
+                        opacity: "toggle"
+                    },
+                    300
+                );
+            });
+        });
+    </script>
+
+</h:head>
+
+<h:body styleClass="landing-body">
+    <div id="home" class="landing-wrapper">
+        <div id="header">
+            <ui:include src="/link_include.xhtml"/>
+
+            <div class="header-content">
+                <h1>TERTIARY VERIFY</h1>
+            </div>
+        </div>
+
+        <div class="news-details-box news-details-center">
+            <h2 style="margin: 10px;">NEWS</h2>
+            <div class="ui-g-12 ui-lg-12">
+
+                <h:panelGroup rendered="#{newsUI.newsList.size() lt 1}">
+                    <p style="color: #902b2b; font-size: 25px">No news available at the moment...</p>
+                    <hr/>
+                </h:panelGroup>
+
+                <p:repeat var="news" value="#{newsUI.newsList}">
+                    <div class="blog-card">
+                        <div class="meta">
+
+                            <p:graphicImage value="#{imageModelUI.image}" style="width: 100%;height: 80%" class="photo" cache="false">
+                                <f:param name="id" value="#{news.image.id}" />
+                            </p:graphicImage>
+
+                            <ul class="details">
+                                <li class="author"><a
+                                        href="#">#{news.lastUpdateUser.name} #{news.lastUpdateUser.surname}</a>
+                                </li>
+                                <li class="date">#{commonItemUI.formatDate(news.createDate)}</li>
+                            </ul>
+                        </div>
+                        <div class="description">
+                            <h1>#{news.title}</h1>
+                            <h2>#{news.subTitle}</h2>
+                            <p><h:outputText escape="false"
+                                             value="#{commonItemUI.substringText(news.description,500)}"/></p>
+                            <p class="read-more">
+                                <h:link styleClass="secondary" value="READ MORE"
+                                        outcome="/newsdetails?ref=#{commonItemUI.encrypt(newsUI.createRef(news))}"/>
+                            </p>
+                        </div>
+                    </div>
+                </p:repeat>
+            </div>
+        </div>
+
+        <div class="news-details-box news-details-center">
+            <h2>EVENTS</h2>
+
+            <h:panelGroup rendered="#{eventUI.eventList.size() lt 1}">
+                <p style="color: #902b2b; font-size: 25px">No events available at the moment...</p>
+                <hr/>
+            </h:panelGroup>
+
+            <div class="ui-g" style="margin: 0px">
+                <p:repeat var="event" value="#{eventUI.eventList}">
+                    <div style="margin: 0px" class="ui-g-12 ui-md-6">
+                        <div class="row">
+                            <div class="column">
+                                <div class="post-module">
+                                    <!-- Thumbnail-->
+                                    <div class="thumbnail">
+                                        <div class="date">
+                                            <div class="day">#{eventUI.getDay(event.dateAndTime)}</div>
+                                            <div class="month">#{eventUI.getMonth(event.dateAndTime)}</div>
+                                        </div>
+
+                                        <p:graphicImage value="#{imageModelUI.image}" style="height: 100%"  cache="false">
+                                            <f:param name="id" value="#{event.image.id}" />
+                                        </p:graphicImage>
+
+                                    </div>
+                                    <!-- Post Content-->
+                                    <div class="post-content">
+                                        <div class="category">Time: #{eventUI.getTime(event.dateAndTime)}</div>
+                                        <h1 class="title">#{event.title}</h1>
+                                        <h2 class="sub_title">#{event.subTitle}</h2>
+                                        <h:outputText styleClass="description" style="color: #757575"
+                                                      value="#{event.description}" escape="false"/>
+
+                                        <hr/>
+                                        <p><i class="fa fa-map-marker"> </i><a
+                                                href="#"> Location: #{event.location}</a></p>
+                                        <div class="post-meta">
+
+                                                <span class="comments"><i class="fa fa-user"></i><a
+                                                        href="#"> #{event.lastUpdateUser.name} #{event.lastUpdateUser.surname}</a></span>
+
+                                            <span class="timestamp"><i
+                                                    class="fa fa-calendar-plus-o"></i>Created: #{eventUI.formatDate(event.createDate)}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </p:repeat>
+            </div>
+        </div>
+        <ui:include src="/home_footer_include.xhtml"/>
+    </div>
+</h:body>
+
+</html>

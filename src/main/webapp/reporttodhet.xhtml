@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <f:facet name="first">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <meta name="viewport"
+              content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+    </f:facet>
+    <title>home</title>
+    <script type="text/javascript">
+        $(function () {
+            var menu = $('#menu');
+
+            $('#menu-button').on('click', function (e) {
+                if (menu.hasClass('lmenu-active')) {
+                    menu.addClass('fadeOutUp');
+
+                    setTimeout(function () {
+                        menu.removeClass('fadeOutUp fadeInDown lmenu-active');
+                    }, 500);
+                } else {
+                    menu.addClass('lmenu-active fadeInDown');
+                }
+                e.preventDefault();
+            });
+
+            menu.find('a').on('click', function () {
+                menu.removeClass('fadeOutUp fadeInDown lmenu-active');
+            });
+        });
+    </script>
+</h:head>
+
+<h:body styleClass="landing-body">
+    <div id="home" class="landing-wrapper">
+        <div id="header">
+            <ui:include src="/link_include.xhtml"/>
+
+            <p:importEnum type="com.pc.entities.enums.ReportTypeEnum"/>
+
+            <h:form id="mainForm">
+
+                <div style="margin-top: 15px">
+                    <!-- Add background image class="header-content" -->
+                    <div class="search-box report-inst-center">
+                        <div style="text-align: center;">
+                            <p style="color: white; font-size: 25px">Report Institution
+                                To DHET</p>
+                        </div>
+
+
+                        <div class="ui-g ui-fluid">
+                            <div class="ui-g-12 ui-lg-12">
+                                <div class="card card-w-title">We deploy all efforts to
+                                    protect the private nature of your personal information...
+                                </div>
+
+                                <div class="card card-w-title" style="text-align: left">
+
+
+                                    <p:panelGrid columns="2" layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group">
+                                        <h:panelGroup>
+
+                                            <p:outputLabel value="Name" for="reporterName"/>
+                                            <p:inputText
+                                                    value="#{reportedInstitutionsUI.reportedInstitutions.reporterName}"
+                                                    id="reporterName" style="width:100%" required="true"
+                                                    requiredMessage="Please enter your name">
+                                                <p:ajax/>
+                                            </p:inputText>
+                                        </h:panelGroup>
+
+                                        <h:panelGroup>
+                                            <p:outputLabel value="Surname" for="reporterSurname"/>
+                                            <p:inputText
+                                                    value="#{reportedInstitutionsUI.reportedInstitutions.reporterSurname}"
+                                                    id="reporterSurname" style="width:100%" required="true"
+                                                    requiredMessage="Please enter your surname">
+                                                <p:ajax/>
+                                            </p:inputText>
+                                        </h:panelGroup>
+
+                                        <h:panelGroup>
+                                            <p:outputLabel value="Email Address" for="reporterEmail"/>
+                                            <p:inputText type="email"
+                                                         value="#{reportedInstitutionsUI.reportedInstitutions.reporterEmail}"
+                                                         validatorMessage="Please enter a valid email address"
+                                                         id="reporterEmail" style="width:100%" required="true"
+                                                         requiredMessage="Please enter your email">
+                                                <p:ajax/>
+                                                <f:validateRegex pattern="#{commonUI.EMAIL_FORMAT}"/>
+                                            </p:inputText>
+                                        </h:panelGroup>
+
+                                        <h:panelGroup>
+                                            <p:outputLabel value="Cell Number" for="reporterCell"/>
+                                            <p:inputMask mask="#{commonUI.CELLPHONE_FORMAT}"
+                                                         value="#{reportedInstitutionsUI.reportedInstitutions.reporterCell}"
+                                                         id="reporterCell" style="width:100%" required="true"
+                                                         requiredMessage="Please enter cell numbere">
+                                                <p:ajax/>
+                                            </p:inputMask>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+
+                                    <p:panelGrid styleClass="ui-panelgrid-blank form-group"
+                                                 columns="2" layout="grid">
+                                        <h:panelGroup>
+                                            <p:focus for="repType"/>
+                                            <p:outputLabel value="Report Type:"/>
+
+                                            <p:selectOneRadio id="repType" layout="responsive"
+                                                              required="true"
+                                                              requiredMessage="Please select type of report"
+                                                              style="margin:1%"
+                                                              value="#{reportedInstitutionsUI.reportedInstitutions.reportType}"
+                                                              columns="2">
+                                                <f:selectItems value="#{commonItemUI.reportTypeEnumDD}"
+                                                               var="var" itemLabel="#{var.friendlyName}"
+                                                               itemValue="#{var}"/>
+                                                <p:ajax onstart="PF('loading').show()"
+                                                        oncomplete="PF('loading').hide()"
+                                                        listener="#{reportedInstitutionsUI.prepareAddCouse}"
+                                                        update="pgCourseDetails instDetails pgCourses @form"/>
+                                            </p:selectOneRadio>
+
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+
+
+                                    <h:panelGroup id="instDetails"
+                                                  rendered="#{reportedInstitutionsUI.reportedInstitutions.reportType eq ReportTypeEnum.BogusInstitute}">
+                                        <p:panelGrid styleClass="ui-panelgrid-blank form-group"
+                                                     columns="2" layout="grid">
+
+                                            <h:panelGroup>
+                                                <p:outputLabel value="Institution Name"
+                                                               for="institutionName"/>
+                                                <p:inputText
+                                                        value="#{reportedInstitutionsUI.reportedInstitutions.institutionName}"
+                                                        id="institutionName" style="width:100%" required="true"
+                                                        requiredMessage="Please enter your institution name">
+                                                    <p:ajax/>
+                                                </p:inputText>
+                                            </h:panelGroup>
+
+                                            <h:panelGroup>
+                                                <p:outputLabel value="Known As" for="knownAs"/>
+                                                <p:inputText
+                                                        value="#{reportedInstitutionsUI.reportedInstitutions.knownAs}"
+                                                        id="knownAs" style="width:100%" required="true"
+                                                        requiredMessage="Please enter the name that the institution is know as">
+                                                    <p:ajax/>
+                                                </p:inputText>
+                                            </h:panelGroup>
+
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <br/>
+                                                <p class="box-title">
+                                                    <i class="fa   fa-map-marker"></i> Address Details
+                                                </p>
+                                            </h:panelGroup>
+
+                                            <h:panelGroup styleClass="md-inputfield">
+                                            </h:panelGroup>
+
+
+                                            <h:panelGroup>
+                                                <p:outputLabel value="Address line 1" for="addressLine1"/>
+                                                <p:inputText id="addressLine1"
+                                                             value="#{reportedInstitutionsUI.address.addressLine1}"
+                                                             style="width:100%" required="true"
+                                                             requiredMessage="Please enter residential address line 1">
+                                                    <p:ajax/>
+                                                </p:inputText>
+                                            </h:panelGroup>
+
+
+                                            <h:panelGroup>
+                                                <p:outputLabel value="Address line 2" for="addressLine2"/>
+                                                <p:inputText id="addressLine2"
+                                                             value="#{reportedInstitutionsUI.address.addressLine2}"
+                                                             style="width:100%" required="false"
+                                                             requiredMessage="Please enter residential address line 2">
+                                                    <p:ajax/>
+                                                </p:inputText>
+                                            </h:panelGroup>
+
+
+                                            <h:panelGroup>
+                                                <p:outputLabel value="Address line 3" for="addressLine3"/>
+                                                <p:inputText id="addressLine3"
+                                                             value="#{reportedInstitutionsUI.address.addressLine3}"
+                                                             style="width:100%" required="false"
+                                                             requiredMessage="Please enter residential address line 3">
+                                                    <p:ajax/>
+                                                </p:inputText>
+                                            </h:panelGroup>
+
+                                            <h:panelGroup>
+                                                <p:outputLabel value="Province" for="province"/>
+                                                <p:selectOneMenu id="province"
+                                                                 value="#{reportedInstitutionsUI.address.province}"
+                                                                 converter="#{provinceConvertor}" style="width:100%"
+                                                                 requiredMessage="Select province" required="true">
+                                                    <f:selectItem itemLabel="---Select Province---"
+                                                                  noSelectionOption="true"/>
+                                                    <f:selectItems value="#{commonItemUI.selectItemsProvince}"
+                                                                   var="rv" itemLabel="#{rv.description}"
+                                                                   itemValue="#{rv}"/>
+                                                    <p:ajax onstart="PF('loading').show()"
+                                                            oncomplete="PF('loading').hide()"
+                                                            update="@form"/>
+                                                </p:selectOneMenu>
+                                            </h:panelGroup>
+
+                                            <h:panelGroup id="pgCity"
+                                                          rendered="#{reportedInstitutionsUI.address.province ne null}">
+                                                <p:outputLabel value="City"/>
+                                                <p:selectOneMenu id="city"
+                                                                 value="#{reportedInstitutionsUI.address.city}"
+                                                                 converter="#{cityConvertor}" style="width:100%"
+                                                                 requiredMessage="Select city" required="true">
+                                                    <f:selectItem itemLabel="---Select City---"
+                                                                  noSelectionOption="true"/>
+                                                    <f:selectItems
+                                                            value="#{reportedInstitutionsUI.selectItemsCity}" var="rv"
+                                                            itemLabel="#{rv.description}" itemValue="#{rv}"/>
+                                                    <p:ajax/>
+                                                </p:selectOneMenu>
+                                            </h:panelGroup>
+
+                                            <h:panelGroup>
+                                                <p:outputLabel value="Suburb/Area" for="suburb"/>
+                                                <p:inputText id="suburb"
+                                                             value="#{reportedInstitutionsUI.address.suburb}"
+                                                             style="width:100%" required="true"
+                                                             requiredMessage="Please enter suburb">
+                                                    <p:ajax/>
+                                                </p:inputText>
+                                            </h:panelGroup>
+
+                                            <h:panelGroup>
+                                                <p:outputLabel value="Postal Code" for="code"/>
+                                                <p:inputMask mask="#{commonUI.CODE_FORMAT}"
+                                                             value="#{reportedInstitutionsUI.address.code}" id="code"
+                                                             style="width:100%" required="true"
+                                                             requiredMessage="Please enter postal code">
+                                                    <p:ajax/>
+                                                </p:inputMask>
+                                            </h:panelGroup>
+
+                                            <h:panelGroup
+                                                    rendered="#{reportedInstitutionsUI.address.latitude ne null}">
+                                                <p:outputLabel value="GPS Coordinates" for="gps"/>
+                                                <p:inputText disabled="true" id="gps"
+                                                             value="latitude: #{reportedInstitutionsUI.address.latitude} longitude: #{reportedInstitutionsUI.address.latitude}"
+                                                             style="width:100%">
+                                                    <p:ajax/>
+                                                </p:inputText>
+                                            </h:panelGroup>
+
+                                            <h:panelGroup class="ui-inputgroup" rendered="false">
+                                                <!--MAP BUTTON NOT IN USE-->
+                                                <p:commandButton update="mapDialog mapForm"
+                                                                 style="width:50%" oncomplete="PF('mapDialog').show()"
+                                                                 value="Click To Select Location"
+                                                                 class="btn btn-default"
+                                                                 icon="fa fa-map-marker" title="Pin Location"
+                                                                 process="@this"/>
+                                            </h:panelGroup>
+
+                                        </p:panelGrid>
+                                    </h:panelGroup>
+
+
+                                    <p:panelGrid id="pgCourseDetails"
+                                                 styleClass="ui-panelgrid-blank form-group" columns="1"
+                                                 layout="grid">
+                                        <h:panelGroup id="pgCourses"
+                                                      rendered="#{reportedInstitutionsUI.showAddCourse}">
+                                            <p:fieldset id="fsInstitution" legend="Select Institution">
+                                                <p:panelGrid styleClass="ui-panelgrid-blank form-group"
+                                                             columns="1" layout="grid">
+                                                    <h:panelGroup
+                                                            rendered="#{!reportedInstitutionsUI.specifyCourseDetails}">
+                                                        <p:outputLabel style="width:100%"
+                                                                       value="Search Institution" for="institution"/>
+                                                        <p:autoComplete style="width:100%" var="var"
+                                                                        itemLabel="#{var.institutionName}"
+                                                                        itemValue="#{var}"
+                                                                        forceSelection="true" id="institution"
+                                                                        dropdown="false"
+                                                                        value="#{reportedInstitutionsUI.selectedInstitution}"
+                                                                        converter="#{institutionConvertor}"
+                                                                        completeMethod="#{commonItemUI.autoCompleteInstitution}">
+                                                            <p:column headerText="Institution Name">
+                                                                <h:outputText value="#{var.institutionName}"/>
+                                                            </p:column>
+                                                            <p:column headerText="Known As">
+                                                                <h:outputText value="#{var.knownAs}"/>
+                                                            </p:column>
+
+                                                            <p:ajax event="itemSelect"
+                                                                    listener="#{reportedInstitutionsUI.prepareInstitution}"
+                                                                    update="@form"></p:ajax>
+                                                        </p:autoComplete>
+                                                    </h:panelGroup>
+                                                </p:panelGrid>
+
+                                                <p:panelGrid id="pgInstDetails"
+                                                             rendered="#{reportedInstitutionsUI.selectedInstitution !=null}"
+                                                             styleClass="ui-panelgrid-blank form-group" columns="2"
+                                                             layout="grid">
+
+                                                    <h:panelGroup>
+                                                        <p:outputLabel value="Institution Name"
+                                                                       for="institutionName"/>
+                                                        <p:inputText
+                                                                value="#{reportedInstitutionsUI.reportedInstitutions.institutionName}"
+                                                                style="width:100%" disabled="true">
+                                                            <p:ajax/>
+                                                        </p:inputText>
+                                                    </h:panelGroup>
+
+                                                    <h:panelGroup>
+                                                        <p:outputLabel value="Known As" for="knownAs"/>
+                                                        <p:inputText
+                                                                value="#{reportedInstitutionsUI.reportedInstitutions.knownAs}"
+                                                                style="width:100%" disabled="true">
+                                                            <p:ajax/>
+                                                        </p:inputText>
+                                                    </h:panelGroup>
+
+                                                </p:panelGrid>
+                                            </p:fieldset>
+                                            <br/>
+                                            <p:fieldset id="fsAddCOurse" style="margin: 0px"
+                                                        legend="Add Bogus Course">
+
+                                                <p:panelGrid columns="1" layout="grid">
+
+                                                    <h:panelGroup
+                                                            rendered="#{!reportedInstitutionsUI.specifyCourseDetails}">
+                                                        <p:panelGrid columns="1" layout="grid"
+                                                                     styleClass="ui-panelgrid-blank form-group">
+                                                            <h:panelGroup>
+                                                                <p:outputLabel style="width:100%" value="Search Course"
+                                                                               for="course"/>
+                                                                <div class="ui-inputgroup">
+
+                                                                    <p:autoComplete var="var"
+                                                                                    itemLabel="#{var.description}"
+                                                                                    itemValue="#{var}"
+                                                                                    forceSelection="false" id="course"
+                                                                                    dropdown="false"
+                                                                                    value="#{reportedInstitutionsUI.reportedInstitutionCourse.course}"
+                                                                                    converter="#{courseConvertor}"
+                                                                                    completeMethod="#{commonItemUI.autoCompleteCorse}">
+
+                                                                        <p:column headerText="Course Name">
+                                                                            <h:outputText value="#{var.description}"/>
+                                                                        </p:column>
+
+                                                                        <p:column headerText="Type">
+                                                                            <h:outputText
+                                                                                    value="#{var.courseType.description}"/>
+                                                                        </p:column>
+
+                                                                        <p:column headerText="Level">
+                                                                            <h:outputText
+                                                                                    value="#{var.courseLevel.description}"/>
+                                                                        </p:column>
+                                                                    </p:autoComplete>
+                                                                    <p:spacer width="10"></p:spacer>
+                                                                    <p:commandButton process="fsAddCOurse" value="Add"
+                                                                                     icon="fa fa-plus"
+                                                                                     class="btn btn-primary"
+                                                                                     update="fsAddCOurse"
+                                                                                     actionListener="#{reportedInstitutionsUI.addReportedInstitutionCourse}"/>
+
+                                                                </div>
+                                                            </h:panelGroup>
+                                                            <h:panelGroup>
+                                                                <p:selectBooleanCheckbox id="cbCourse"
+                                                                                         value="#{reportedInstitutionsUI.specifyCourseDetails}">
+                                                                    <p:ajax update="fsAddCOurse"></p:ajax>
+                                                                </p:selectBooleanCheckbox>
+                                                                <p:outputLabel value="Specify Course Details "
+                                                                               for="cbCourse"/>
+
+                                                            </h:panelGroup>
+                                                        </p:panelGrid>
+                                                    </h:panelGroup>
+
+                                                    <p:panelGrid
+                                                            rendered="#{reportedInstitutionsUI.specifyCourseDetails}"
+                                                            styleClass="ui-panelgrid-blank form-group" columns="4"
+                                                            layout="grid">
+                                                        <h:panelGroup>
+                                                            <p:outputLabel value="Course Name" for="cname"/>
+                                                            <p:inputText id="cname"
+                                                                         value="#{reportedInstitutionsUI.reportedInstitutionCourse.courseDesc}"
+                                                                         style="width:100%" required="false"
+                                                                         requiredMessage="Please enter corse name">
+                                                                <p:ajax/>
+                                                            </p:inputText>
+                                                        </h:panelGroup>
+
+                                                        <h:panelGroup>
+                                                            <p:outputLabel value="Course Type" for="ctype"/>
+                                                            <p:inputText id="ctype"
+                                                                         value="#{reportedInstitutionsUI.reportedInstitutionCourse.courseType}"
+                                                                         style="width:100%" required="false"
+                                                                         requiredMessage="Please enter course type">
+                                                                <p:ajax/>
+                                                            </p:inputText>
+                                                        </h:panelGroup>
+
+                                                        <h:panelGroup>
+                                                            <p:outputLabel value="Course Level" for="clevel"/>
+                                                            <p:inputText id="clevel"
+                                                                         value="#{reportedInstitutionsUI.reportedInstitutionCourse.courseLevel}"
+                                                                         style="width:100%" required="false"
+                                                                         requiredMessage="Please enter course level">
+                                                                <p:ajax/>
+                                                            </p:inputText>
+                                                        </h:panelGroup>
+
+                                                        <h:panelGroup class="ui-inputgroup">
+                                                            <p:commandButton process="fsAddCOurse" value="Add"
+                                                                             icon="fa fa-plus" class="btn btn-primary"
+                                                                             update="fsAddCOurse"
+                                                                             actionListener="#{reportedInstitutionsUI.addReportedInstitutionCourse}"/>
+                                                        </h:panelGroup>
+
+                                                        <h:panelGroup
+                                                                rendered="#{reportedInstitutionsUI.specifyCourseDetails}">
+
+                                                            <p:selectBooleanCheckbox id="cbCourse2"
+                                                                                     value="#{reportedInstitutionsUI.specifyCourseDetails}">
+                                                                <p:ajax update="fsAddCOurse"></p:ajax>
+                                                            </p:selectBooleanCheckbox>
+                                                            <p:outputLabel value=" Uncheck To Search Course"
+                                                                           for="cbCourse"/>
+                                                        </h:panelGroup>
+
+                                                    </p:panelGrid>
+                                                </p:panelGrid>
+
+                                                <br/>
+                                                <p:dataTable var="var"
+                                                             value="#{reportedInstitutionsUI.reportedInstitutionCourseList}"
+                                                             reflow="true" rows="5" paginatorPosition="bottom"
+                                                             paginator="true">
+
+                                                    <f:facet name="header">
+                                                        <h:outputText value="Course List"/>
+                                                    </f:facet>
+
+                                                    <p:column headerText="Course Name"
+                                                              sortBy="#{var.description}">
+                                                        <h:outputText value="#{var.course.description}"/>
+                                                        <h:outputText value="#{var.courseDesc}"/>
+                                                    </p:column>
+
+                                                    <p:column headerText="Course Type"
+                                                              sortBy="#{var.courseType.description}">
+                                                        <h:outputText value="#{var.course.courseType.description}"/>
+                                                        <h:outputText value="#{var.courseType}"/>
+                                                    </p:column>
+
+                                                    <p:column headerText="Course Level"
+                                                              sortBy="#{var.courseLevel.description}">
+                                                        <h:outputText
+                                                                value="#{var.course.courseLevel.description}"/>
+                                                        <h:outputText value="#{var.courseLevel}"/>
+                                                    </p:column>
+
+                                                    <p:column width="45">
+                                                        <p:commandButton class="btn btn-block btn-warning btn-xs"
+                                                                         update="@form" icon="fa fa-trash-o"
+                                                                         title="Delete"
+                                                                         process="@this"
+                                                                         action="#{reportedInstitutionsUI.removeReportedInstitutionCourse}">
+                                                            <p:confirm header="Confirm"
+                                                                       message="Are you sure you want to delete this course?"
+                                                                       icon="ui-icon-warning"/>
+                                                            <f:setPropertyActionListener value="#{var}"
+                                                                                         target="#{reportedInstitutionsUI.reportedInstitutionCourse}"/>
+                                                        </p:commandButton>
+                                                    </p:column>
+
+                                                </p:dataTable>
+
+                                            </p:fieldset>
+                                        </h:panelGroup>
+
+                                    </p:panelGrid>
+
+                                    <fieldset>
+                                        <p:panelGrid columns="2" layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group">
+
+
+                                            <h:panelGroup class="ui-inputgroup">
+                                                <p:commandButton value="Send Report" icon="fa fa-save"
+                                                                 onstart="PF('loading').show()"
+                                                                 oncomplete="PF('loading').hide()"
+                                                                 class="btn btn-primary" update="@form"
+                                                                 actionListener="#{reportedInstitutionsUI.submitReportedInstitutions}"/>
+                                            </h:panelGroup>
+
+                                            <h:panelGroup class="ui-inputgroup">
+                                                <p:commandButton value="Clear" icon="fa fa-recycle"
+                                                                 process="@this" class="btn orange-btn" update="@form"
+                                                                 actionListener="#{reportedInstitutionsUI.reset}"/>
+                                            </h:panelGroup>
+
+                                        </p:panelGrid>
+                                    </fieldset>
+
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+                <p:dialog widgetVar="feedbackDialog" hideEffect="clip"
+                          showEffect="clip" id="feedbackDialog" appendTo="@(body)"
+                          modal="true" closable="true" width="50%" height="50%"
+                          responsive="true" closeOnEscape="true">
+                    <f:facet name="header">
+                        <h4 class="box-title">Report Submited</h4>
+                    </f:facet>
+
+                    <p:fieldset>
+                        <br/>
+                        <div class="alert alert-info">
+                            #{reportedInstitutionsUI.mssg}</div>
+                    </p:fieldset>
+
+                </p:dialog>
+
+            </h:form>
+        </div>
+
+        <p:dialog widgetVar="mapDialog" hideEffect="clip" showEffect="clip"
+                  id="mapDialog" appendTo="@(body)" modal="true" closable="true"
+                  width="50%" height="70%" responsive="true" closeOnEscape="true">
+            <f:facet name="header">
+                <h4 class="box-title">Select Location</h4>
+            </f:facet>
+
+            <h:form id="mapForm" prependId="false">
+
+                <p:gmap widgetVar="gmap" rendered="true" id="gmap"
+                        center="-26.205072,28.046915" zoom="15" type="ROADMAP"
+                        style="width:100%;height:400px">
+                    <p:ajax event="pointSelect" oncomplete="PF('mapDialog').hide()"
+                            listener="#{reportedInstitutionsUI.onPointSelect}"/>
+                </p:gmap>
+
+                <script type="text/javascript">
+                    if (navigator.geolocation) {
+                        checkGeolocationByHTML5();
+                    } else {
+                        checkGeolocationByLoaderAPI(); // HTML5 not supported! Fall back to Loader API.
+                    }
+
+                    function checkGeolocationByHTML5() {
+                        navigator.geolocation.getCurrentPosition(function (position) {
+                            setMapCenter(position.coords.latitude, position.coords.longitude);
+                        }, function () {
+                            checkGeolocationByLoaderAPI(); // Error! Fall back to Loader API.
+                        });
+                    }
+
+                    function checkGeolocationByLoaderAPI() {
+                        if (google.loader.ClientLocation) {
+                            setMapCenter(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude);
+                        } else {
+                            // Unsupported! Show error/warning?
+                        }
+                    }
+
+                    function setMapCenter(latitude, longitude) {
+                        PF('gmap').getMap().setCenter(new google.maps.LatLng(latitude, longitude));
+                    }
+                </script>
+            </h:form>
+
+            <p:ajax event="close" update="mainForm"/>
+        </p:dialog>
+
+        <ui:include src="/home_footer_include.xhtml"/>
+
+        <ui:include src="/common_dialog.xhtml"/>
+
+    </div>
+</h:body>
+
+</html>

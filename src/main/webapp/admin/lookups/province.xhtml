@@ -1,0 +1,110 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Province</ui:define>
+
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <div class="card">
+                    <!-- This is used to as display name on the lookups.xhtml -->
+                    <!--  <displayName>Province</displayName> -->
+                    <h3 class="box-title"><i class="fa fa-th"></i> Province</h3>
+                    <h:form id="mainForm">
+                        <p:fieldset>
+                            <br/>
+                            <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText id="description" value="#{provinceUI.province.description}"
+                                                 style="width:100%" required="true"
+                                                 requiredMessage="Please enter description"/>
+                                    <p:outputLabel value="Description" for="description"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText id="code" value="#{provinceUI.province.code}" style="width:100%"
+                                                 required="true" requiredMessage="Please enter code"/>
+                                    <p:outputLabel value="Code" for="code"/>
+                                </h:panelGroup>
+
+
+                            </p:panelGrid>
+                            <br/>
+                        </p:fieldset>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <br/>
+                            <p:commandButton onstart="PF('loading').show()" oncomplete="PF('loading').hide()"
+                                             value="Submit" icon="fa fa-save" class="btn btn-primary"
+                                             update="@form tableForm" actionListener="#{provinceUI.saveProvince}"/>
+                            <p:spacer width="10"/>
+                            <p:commandButton value="Clear" process="@this" icon="fa fa-recycle" class="btn orange-btn"
+                                             update="@form" actionListener="#{provinceUI.reset}"/>
+                        </h:panelGroup>
+                    </h:form>
+                </div>
+                <div class="card">
+                    <h:form id="tableForm">
+                        <p:dataTable var="var" value="#{provinceUI.dataModel}" id="provinceList" rowKey="#{var.id}"
+                                     paginator="true" rows="5" paginatorPosition="bottom"
+                                     paginatorTemplate="Page {CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="5,10,15,20,25,30,35,40,45,50,55,60,65,75,100" reflow="true"
+                                     lazy="true">
+                            <f:facet name="header">
+                                <h:outputText value="Province List"/>
+                            </f:facet>
+                            <p:column headerText="Description" sortBy="#{var.description}"
+                                      filterBy="#{var.description}">
+                                <h:outputText value="#{var.description}"/>
+                            </p:column>
+
+                            <p:column headerText="Code" sortBy="#{var.code}" filterBy="#{var.code}">
+                                <h:outputText value="#{var.code}"/>
+                            </p:column>
+
+
+                            <p:column headerText="Last Update Date" sortBy="#{var.lastUpdateDate}">
+                                <h:outputText value="#{var.lastUpdateDate}">
+                                    <f:convertDateTime pattern="dd MMM yyyy"/>
+                                </h:outputText>
+                                <h:outputText value="N/A" rendered="#{var.lastUpdateDate eq null}"/>
+                            </p:column>
+
+                            <p:column headerText="Last Update User" sortBy="#{var.lastUpdateUser}">
+                                <h:outputText value="#{var.lastUpdateUser.name} #{var.lastUpdateUser.surname}"/>
+                                <h:outputText value="N/A" rendered="#{var.lastUpdateUser eq null}"/>
+                            </p:column>
+
+                            <p:column headerText="Date Created" sortBy="#{var.createDate}">
+                                <h:outputText value="#{var.createDate}">
+                                    <f:convertDateTime pattern="dd MMM yyyy"/>
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column width="105">
+                                <p:commandButton class="btn btn-block btn-info btn-xs" icon="fa fa-database"
+                                                 title="Update" process="@this" update="mainForm">
+                                    <f:setPropertyActionListener value="#{var}" target="#{provinceUI.province}"/>
+                                </p:commandButton>
+                                <p:spacer width="5"/>
+                                <p:commandButton onstart="PF('loading').show()" oncomplete="PF('loading').hide()"
+                                                 class="btn btn-block orange-btn btn-xs" update="mainForm tableForm"
+                                                 icon="fa fa-trash-o" title="Delete" process="@this"
+                                                 action="#{provinceUI.deleteProvince}">
+                                    <p:confirm header="Confirm" message="Are you sure you want to delete this province?"
+                                               icon="ui-icon-warning"/>
+                                    <f:setPropertyActionListener value="#{var}" target="#{provinceUI.province}"/>
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </div>
+            </div>
+        </div>
+
+    </ui:define>
+
+</ui:composition>

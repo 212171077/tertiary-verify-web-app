@@ -1,0 +1,8 @@
+  														 <h:panelGroup  >
+	  														 <p:outputLabel value="Select #%#%" for="%##%" />
+																<p:selectOneMenu id="%##%" style="width:100%" value="#{%%%%UI.%%%%.%##%}" required="true" requiredMessage="Please Select #%#%">
+																	<p:ajax />
+																	<f:selectItem itemLabel=""  noSelectionOption="true" />
+																	<f:selectItems value="#{commonItemUI.%%%#DD}" var="rv" itemLabel="#{rv.displayName}" itemValue="#{rv}" />
+															</p:selectOneMenu>
+														</h:panelGroup>

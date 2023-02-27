@@ -1,0 +1,36 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:dataTable var="var" value="#{courseList}"
+                 reflow="true" rows="5" paginatorPosition="bottom"
+                 paginator="true">
+
+        <f:facet name="header">
+            <h:outputText value="Course List"/>
+        </f:facet>
+
+        <p:column headerText="Id" sortBy="#{var.id}"
+                  rendered="false">
+            <h:outputText value="#{var.id}"/>
+        </p:column>
+
+        <p:column headerText="Course Name"
+                  filterBy="#{var.description}"
+                  sortBy="#{var.description}">
+            <h:outputText value="#{var.description}"/>
+        </p:column>
+
+        <p:column headerText="Course Type"
+                  sortBy="#{var.courseType}">
+            <h:outputText value="#{var.courseType.description}"/>
+        </p:column>
+
+        <p:column headerText="Course Level"
+                  sortBy="#{var.courseLevel}">
+            <h:outputText value="#{var.courseLevel.description}"/>
+        </p:column>
+
+    </p:dataTable>
+</ui:composition>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <f:facet name="first">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+    </f:facet>
+    <title>news and events</title>
+    <h:outputStylesheet name="css/my_style.css" library="barcelona-layout"/>
+    <script type="text/javascript">
+        $(function () {
+            var menu = $('#menu');
+
+            $('#menu-button').on('click', function (e) {
+                if (menu.hasClass('lmenu-active')) {
+                    menu.addClass('fadeOutUp');
+
+                    setTimeout(function () {
+                        menu.removeClass('fadeOutUp fadeInDown lmenu-active');
+                    }, 500);
+                } else {
+                    menu.addClass('lmenu-active fadeInDown');
+                }
+                e.preventDefault();
+            });
+
+            menu.find('a').on('click', function () {
+                menu.removeClass('fadeOutUp fadeInDown lmenu-active');
+            });
+        });
+
+        $(window).load(function () {
+            $(".post-module").hover(function () {
+                $(this).find(".description").stop().animate(
+                    {
+                        height: "toggle",
+                        opacity: "toggle"
+                    },
+                    300
+                );
+            });
+        });
+    </script>
+
+</h:head>
+
+<h:body styleClass="landing-body">
+    <div id="home" class="landing-wrapper">
+        <div id="header">
+            <ui:include src="/link_include.xhtml"/>
+            <div class="header-content">
+                <h1>TERTIARY VERIFY</h1>
+            </div>
+        </div>
+
+        <h:form id="mainForm">
+            <div class="news-details-box news-details-center">
+                <h2>NEWS</h2>
+                <div class="ui-g-12 ui-lg-12" style="text-align: start">
+                    <p:repeat var="news" value="#{newsUI.newsList}">
+                        <div class="blog-card">
+                            <div class="meta">
+                                <div class="photo"
+                                     style="background-image: url(#{news.image})"></div>
+                                <ul class="details">
+                                    <li class="author"><a
+                                            href="#">#{news.lastUpdateUser.name} #{news.lastUpdateUser.surname}</a>
+                                    </li>
+                                    <li class="date">#{commonItemUI.formatDate(news.createDate)}</li>
+                                </ul>
+                            </div>
+                            <div class="description">
+                                <h1>#{commonItemUI.substringText(news.title,30)}</h1>
+                                <h2>#{commonItemUI.substringText(news.subTitle,30)}</h2>
+                                <p>
+                                    <h:outputText escape="false"
+                                                  value="#{commonItemUI.substringText(news.description,500)}"/>
+                                </p>
+                                <p class="read-more">
+                                    <h:link styleClass="secondary" value="READ MORE"
+                                            outcome="/newsdetails?id=#{commonItemUI.encrypt(news.id)}"/>
+                                </p>
+                            </div>
+                        </div>
+                    </p:repeat>
+                </div>
+            </div>
+
+            <div class="features-content">
+                <h2>EVENTS</h2>
+                <div class="ui-g" style="margin: 0px">
+                    <p:repeat var="event" value="#{eventUI.eventList}">
+                        <div style="margin: 0px" class="ui-g-12 ui-md-6">
+                            <div style="width: 100%">
+                                <div class="column">
+                                    <div class="post-module">
+                                        <!-- Thumbnail-->
+                                        <div class="thumbnail">
+                                            <div class="date">
+                                                <div class="day">#{eventUI.getDay(event.dateAndTime)}</div>
+                                                <div class="month">#{eventUI.getMonth(event.dateAndTime)}</div>
+                                            </div>
+                                            <img style=" height: 100%"
+                                                 src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/169963/photo-1429043794791-eb8f26f44081.jpeg"/>
+                                        </div>
+                                        <!-- Post Content-->
+                                        <div class="post-content">
+                                            <div class="category">Time: #{eventUI.getTime(event.dateAndTime)}</div>
+                                            <h1 class="title">#{event.title}</h1>
+                                            <h2 class="sub_title">#{event.subTitle}</h2>
+                                            <h:outputText styleClass="description" style="color: #757575"
+                                                          value="#{event.description} Desc" escape="false"/>
+
+                                            <hr/>
+                                            <p><i class="fa fa-map-marker"> </i><a
+                                                    href="#"> Location: #{event.location}</a></p>
+                                            <div class="post-meta">
+
+                                                <span class="comments"><i class="fa fa-user"></i><a
+                                                        href="#"> #{event.lastUpdateUser.name} #{event.lastUpdateUser.surname}</a></span>
+
+                                                <span class="timestamp"><i
+                                                        class="fa fa-calendar-plus-o"></i>Created: #{commonItemUI.formatDate(event.createDate)}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </p:repeat>
+                </div>
+            </div>
+
+            <ui:include src="/home_footer_include.xhtml"/>
+
+        </h:form>
+    </div>
+
+
+</h:body>
+
+</html>

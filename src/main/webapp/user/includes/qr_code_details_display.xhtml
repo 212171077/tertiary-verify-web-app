@@ -1,0 +1,21 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <p:panelGrid class="list-group-item" style="width:100%"
+                 columns="1" layout="grid">
+        <p:panelGrid columns="2">
+            <p:barcode value="#{qrCode}"
+                       format="png" width="300" height="300" type="qr"/>
+
+            <center><p:commandButton
+                    disabled="#{institutionUI.institution.status eq ApprovalStatusEnum.Expired}"
+                    oncomplete="PF('wiz').loadStep(PF('wiz').cfg.steps [0], true)"
+                    value="Download QR Code" icon="fa fa-download"
+                    class="btn btn-primary" update="@form" ajax="false"
+                    actionListener="#{institutionUI.downloadQRCode()}"/></center>
+
+        </p:panelGrid>
+
+    </p:panelGrid>
+
+
+</ui:composition>

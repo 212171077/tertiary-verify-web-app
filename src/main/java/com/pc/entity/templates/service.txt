@@ -1,0 +1,72 @@
+package com.pc.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import java.util.Date;
+
+import com.pc.entities.####;
+import com.pc.repositories.####Repository;
+import com.pc.framework.AbstractService;
+
+@Service
+public class ####Service extends AbstractService{
+	@Autowired
+	####Repository repository;
+	
+	public void save####(#### %%%%)  throws Exception
+	{
+	    if(%%%%.getId()==null)
+		{
+			%%%%.setCreateDate(new Date());
+		}else{
+			
+			if(getCurrentUser() !=null){%%%%.setLastUpdateUser(getCurrentUser());}
+			%%%%.setLastUpdateDate(new Date());
+		}
+		repository.save(%%%%);
+	}
+	
+	public void delete####(#### %%%%)  throws Exception
+	{
+		repository.delete(%%%%);
+	}
+	
+	public void delete####ByID(Integer  arg0)  throws Exception
+	{
+		 repository.deleteById(arg0);
+	}
+	
+	public List<####> findAll####()  throws Exception
+	{
+		return repository.findAll();
+	}
+	
+	public Page<####> findAll####(Pageable p)  throws Exception
+	{
+		return repository.findAll(p);
+	}
+	
+	public List<####> findAll####(Sort s)  throws Exception
+	{
+		return repository.findAll(s);
+	}
+	
+	public #### findById(Long parseLong) throws Exception
+	{
+		return repository.findById(parseLong);
+	}
+	
+	/*public List<####> findByDescriptionStartingWith(String description)  throws Exception
+	{
+		return repository.findByDescriptionStartingWith(description);
+	}*/
+	
+	
+	
+
+}

@@ -1,0 +1,219 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:sec="http://www.springframework.org/security/tags"> 
+<h:head></h:head> 
+<body>
+	<ui:composition template="/WEB-INF/template/commonLayout.xhtml">
+		 <p:importEnum type="com.pc.entity.enums.YesNoEnum"/>
+		<ui:define name="content">
+			 <!-- Main content -->
+		    <section class="content">
+		    		<h:form id="mainForm">
+			    		<div class="box box-default color-palette-box">
+							<div class="box-header with-border">
+								 <h3 class="box-title"><i class="fa fa-th"></i> Workflow Configuration</h3>
+							 </div>
+							     <div class="box box-default color-palette-box">
+								 	   <div class="box-body">
+									    <p:tree id="treeSingle" 
+											    value="#{workflowConfigUI.root}" 
+											    var="node"
+											    selectionMode="single"
+											    selection="#{workflowConfigUI.selectedNode}"
+											    dynamic="true" orientation="horizontal">
+											    
+											<p:treeNode>
+												<h:outputText value="#{node}" />
+											</p:treeNode>
+											
+											<p:treeNode type="Workflow">
+									            <h:outputText value="#{node}" />
+									        </p:treeNode>
+									    		
+									        <p:treeNode type="WorkflowRole">
+									            <h:outputText value="#{node.description}" />
+									        </p:treeNode>
+									        
+									        <p:treeNode type="WorkflowRoleUser">
+									            <h:outputText value="#{node.position}. #{node.description}" />
+									        </p:treeNode>
+									        
+									        <p:treeNode type="WorkflowRoleUserLast">
+									            <h:outputText value="#{node.userRole.user.name} #{node.userRole.user.surname}" />
+									        </p:treeNode>
+									    </p:tree>
+									    
+									    <p:contextMenu for="treeSingle" nodeType="Workflow">
+											<p:menuitem value="Add Workflow" icon="fa fa-plus" oncomplete="PF('addWorkflowDialog').show()" update="addWorkflowDialog" />
+											<p:menuitem rendered="false" value="Remove Workflow" icon="fa fa-trash-o" update="@form">
+												<p:confirm header="#{lang['confirmation']}" message="Are you sure you want to remove this workflow?" />
+											</p:menuitem>
+										</p:contextMenu>
+										
+										 <p:contextMenu for="treeSingle" nodeType="WorkflowRole">
+											<p:menuitem value="Add Workflow Role" icon="fa fa-plus" actionListener="#{workflowConfigUI.prepareWorkflowRoleList}" oncomplete="PF('addWorkflowRoleDialog').show()" update="addWorkflowRoleDialog" />
+											<p:menuitem value="Remove Workflow" icon="fa fa-trash-o" actionListener="#{workflowConfigUI.deleteWorkflow}" update="@form">
+												<p:confirm header="#{lang['confirmation']}" message="Are you sure you want to remove this workflow?" />
+											</p:menuitem>
+										</p:contextMenu>
+										
+										<p:contextMenu for="treeSingle" nodeType="WorkflowRoleUser">
+											<p:menuitem value="Add Users" icon="fa fa-user-plus" actionListener="#{workflowConfigUI.prepareUserRoles}" oncomplete="PF('addUserDialog').show()" update="addUserDialog" />
+											<p:menuitem value="Remove" icon="fa fa-trash-o" actionListener="#{workflowConfigUI.deleteWorkflowRole}" update="@form">
+												<p:confirm header="#{lang['confirmation']}" message="Are you sure you want to remove this workflow?" />
+											</p:menuitem>
+										</p:contextMenu>
+										
+										<p:contextMenu for="treeSingle" nodeType="WorkflowRoleUserLast">
+											<p:menuitem value="Remove User" icon="fa fa-trash-o" actionListener="#{workflowConfigUI.deleteWorkFlowRoleUser}" update="@form">
+												<p:confirm header="#{lang['confirmation']}" message="Are you sure you want to remove this user?" />
+											</p:menuitem>
+										</p:contextMenu>
+								 	   </div>
+					   			 </div>
+					   		 </div>
+					 </h:form>
+			</section>
+			
+			<p:dialog widgetVar="addWorkflowRoleDialog" hideEffect="clip" showEffect="clip" id="addWorkflowRoleDialog" appendTo="@(body)" modal="true" closable="true" width="60%" height="50%" responsive="true" closeOnEscape="true">
+			<f:facet name="header">
+				  <p class="box-title"><i class="fa fa-cogs"></i>  Add Workflow Role</p>
+	        </f:facet>
+			<h:form id="addWorkflowRoleDialogForm">
+				
+				<p:panelGrid  class="list-group-item" style="width:100%" columns="2" layout="grid" >
+					<h:panelGroup styleClass="md-inputfield" id="pgDetailInfo">
+					    <h:panelGroup styleClass="md-inputfield">
+                            <p:outputLabel value="Role" />
+                            <p:selectOneMenu  id="role" value="#{workflowConfigUI.workflowRole.role}" converter="#{roleConvertor}" style="width:100%" requiredMessage="Select role" required="true">
+                                <p:ajax listener="#{workflowConfigUI.createWorkflowRoleDesc}" update="pgDesc"/>
+                                <f:selectItem itemLabel="---Select Role---" noSelectionOption="true" />
+                                <f:selectItems value="#{commonItemUI.selectItemsRole}" var="rv" itemLabel="#{rv.description}" itemValue="#{rv}" />
+                                <p:ajax/>
+                            </p:selectOneMenu>
+                       </h:panelGroup>
+					  
+						 <h:panelGroup  >
+						 	 <p:outputLabel value="Permission" />
+							<p:selectOneMenu style="width:100%" value="#{workflowConfigUI.workflowRole.permission}" required="true" requiredMessage="Please select permission">
+								<p:ajax listener="#{workflowConfigUI.createWorkflowRoleDesc}" update="pgDesc"/>
+								<f:selectItem itemLabel="---Select Permission---"  noSelectionOption="true" />
+								<f:selectItems value="#{commonItemUI.permissionDD}" var="rv" itemLabel="#{rv.displayName}" itemValue="#{rv}" />
+							</p:selectOneMenu>
+						</h:panelGroup>
+						
+						<h:panelGroup styleClass="md-inputfield" id="pgDesc">
+						    <p:outputLabel value="Description" for="description" />
+						    <p:inputText disabled="true"  id="description" value="#{workflowConfigUI.workflowRole.description}"  style="width:100%" required="true" requiredMessage="Please enter description"/>
+					  </h:panelGroup>
+					  
+					   <h:panelGroup styleClass="md-inputfield">
+					     <p:outputLabel id="appDisplay" />
+   						 <p:inputTextarea id="aprMssg" value="#{workflowConfigUI.workflowRole.approvalMessage}" rows="2" cols="30" style="width:100%" counter="appDisplay" maxlength="500" counterTemplate="Approval Message ({0} characters remaining.)" autoResize="false" />
+					  </h:panelGroup>
+					  
+					  <h:panelGroup styleClass="md-inputfield">
+					  	  <p:outputLabel id="rejDisplay" />
+   						 <p:inputTextarea id="rejMssg" value="#{workflowConfigUI.workflowRole.rejectionMessage}" rows="2" cols="30" style="width:100%" counter="rejDisplay" maxlength="500" counterTemplate="Rejection Message ({0} characters remaining.)" autoResize="false" />
+				     </h:panelGroup>
+					  
+	                  <h:panelGroup styleClass="md-inputfield">
+	                    	<br/>
+	                       <p:commandButton onstart="PF('loading').show()" oncomplete="PF('loading').hide()" value="Submit" icon="fa fa-save" class="btn btn-primary" update="@form pgOrderList" actionListener="#{workflowConfigUI.saveWorkflowRole}"/>
+	                   			<p:spacer width="10"/>
+	                   			<p:commandButton value="Clear" icon="fa fa-recycle" class="btn btn-warning" update="@form pgOrderList mainForm" actionListener="#{workflowConfigUI.resetWorkflowRole}"/>
+	                  </h:panelGroup>
+                  	</h:panelGroup>
+                  	<h:panelGroup styleClass="md-inputfield" id="pgOrderList">
+	                  	 <p:orderList  style="width:100%" value="#{workflowConfigUI.workflowRoleList}" var="wfr" itemValue="#{wfr}" converter="#{workflowRoleConvertor}" responsive="true">
+					        <p:ajax event="select" listener="#{workflowConfigUI.onSelect}" update="pgDetailInfo"/>
+					        <p:ajax event="unselect" listener="#{workflowConfigUI.onUnselect}" update="@form"/>
+					        <p:ajax event="reorder" listener="#{workflowConfigUI.onReorder}"/>
+					        <f:facet name="caption">Workflow Role(s)</f:facet>
+					         <p:column>
+					            <h:outputText value="#{wfr.description}" />
+					        </p:column>
+					    </p:orderList>
+					    <br/>
+					    <p:fieldset legend="Email Templates" collapsed="true" toggleable="true">
+					    	 <p:repeat var="var" value="#{workflowConfigUI.emailTemplateList}">
+						 		  <li class="list-group-item">
+                                     <i class="fa   fa-envelope-square"></i> #{var.description}
+                                  </li>
+						 	</p:repeat>
+					    </p:fieldset>
+					  
+					  </h:panelGroup>
+                   </p:panelGrid>
+                   
+                  
+			</h:form>
+			 <p:ajax event="close" update="mainForm" />
+		</p:dialog>
+		
+		<p:dialog widgetVar="addUserDialog" hideEffect="clip" showEffect="clip" id="addUserDialog" appendTo="@(body)" modal="true" closable="true" width="25%" height="50%" responsive="true" closeOnEscape="true">
+			<f:facet name="header">
+				<p class="box-title"><i class="fa fa-users"></i> Add User(s)</p>
+	        </f:facet>
+			<h:form id="addUserialogForm">
+			     <h:panelGroup styleClass="md-inputfield">
+                      <p:outputLabel value="Select User" />
+                      <p:selectOneMenu  id="wf" value="#{workflowConfigUI.workFlowRoleUser.userRole}" converter="#{userRoleConvertor}" style="width:100%" requiredMessage="Select user" required="true">
+                          <f:selectItem itemLabel="---Select User---" noSelectionOption="true" />
+                          <f:selectItems value="#{workflowConfigUI.userRoleList}" var="rv" itemLabel="#{rv.user.name} #{rv.user.surname}" itemValue="#{rv}" />
+                          <p:ajax/>
+                      </p:selectOneMenu>
+                 </h:panelGroup>
+                 <br/>
+                 <h:panelGroup styleClass="md-inputfield">
+                       <p:commandButton onstart="PF('loading').show()" oncomplete="PF('loading').hide()" value="Submit" icon="fa fa-save" class="btn btn-primary" update="@form" actionListener="#{workflowConfigUI.saveWorkFlowRoleUser}"/>
+                 </h:panelGroup>
+			</h:form>
+			 <p:ajax event="close" update="mainForm" />
+		</p:dialog>	
+				
+		<p:dialog widgetVar="addWorkflowDialog" hideEffect="clip" showEffect="clip" id="addWorkflowDialog" appendTo="@(body)" modal="true" closable="true" width="25%" height="50%" responsive="true" closeOnEscape="true">
+			<f:facet name="header">
+				  <p class="box-title"><i class="fa fa-cogs"></i>  Add Workflow</p>
+	        </f:facet>
+			<h:form id="addWorkflowDialogForm">
+				
+				<p:panelGrid  class="list-group-item" style="width:100%" columns="1" layout="grid" >
+					 <h:panelGroup styleClass="md-inputfield">
+					    <p:outputLabel value="Description" for="description" />
+					    <p:inputText  id="description" value="#{workflowConfigUI.workflow.description}"  style="width:100%" required="true" requiredMessage="Please enter description"/>
+					</h:panelGroup>
+					 <h:panelGroup styleClass="md-inputfield">
+					    <p:outputLabel value="Code" for="code" />
+					    <p:inputText  id="code" value="#{workflowConfigUI.workflow.code}"  style="width:100%" required="true" requiredMessage="Please enter code"/>
+					</h:panelGroup>
+					 <h:panelGroup styleClass="md-inputfield">
+					    <p:outputLabel value="Redirect Page" for="redirectPage" />
+					    <p:inputText  id="redirectPage" value="#{workflowConfigUI.workflow.redirectPage}"  style="width:100%" required="true" requiredMessage="Please enter redirectPage"/>
+					</h:panelGroup>
+					 <h:panelGroup styleClass="md-inputfield" rendered="false">
+					    <p:outputLabel value="Posible Tags" for="tags" />
+					    <p:inputText  id="tags" value="#{workflowConfigUI.workflow.posibleTags}"  style="width:100%" required="false" requiredMessage="Please enter posible tags"/>
+					</h:panelGroup>
+                    <h:panelGroup styleClass="md-inputfield">
+                    	<br/>
+                       <p:commandButton onstart="PF('loading').show()" oncomplete="PF('loading').hide()" value="Submit" icon="fa fa-save" class="btn btn-primary" update="mainForm" actionListener="#{workflowConfigUI.saveWorkflow}"/>
+                   			<p:spacer width="10"/>
+                   			<p:commandButton value="Clear" icon="fa fa-recycle" class="btn btn-warning" update="@form" actionListener="#{workflowConfigUI.resetWorkflow}"/>
+                  		</h:panelGroup>
+                 </p:panelGrid>
+			</h:form>
+			 <p:ajax event="close" update="mainForm" />
+		</p:dialog>
+			
+			
+    	</ui:define>
+    </ui:composition>
+</body> 
+</html>

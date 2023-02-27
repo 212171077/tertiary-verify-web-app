@@ -1,0 +1,4 @@
+  														<h:panelGroup styleClass="md-inputfield">
+														     <p:inputText  id="%##%" value="#{%%%%UI.%%%%.%##%}"  style="width:100%" required="true" requiredMessage="Please enter %##%"/>
+															 <p:outputLabel value="#%#%" for="%##%" />
+														</h:panelGroup>

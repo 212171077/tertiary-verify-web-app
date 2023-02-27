@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+
+<h:head>
+    <f:facet name="first">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <meta name="viewport"
+              content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+    </f:facet>
+    <title>newsletter</title>
+    <h:outputStylesheet name="css/my_style.css" library="barcelona-layout"/>
+    <script type="text/javascript">
+        $(function () {
+            var menu = $('#menu');
+
+            $('#menu-button').on('click', function (e) {
+                if (menu.hasClass('lmenu-active')) {
+                    menu.addClass('fadeOutUp');
+
+                    setTimeout(function () {
+                        menu.removeClass('fadeOutUp fadeInDown lmenu-active');
+                    }, 500);
+                } else {
+                    menu.addClass('lmenu-active fadeInDown');
+                }
+                e.preventDefault();
+            });
+
+            menu.find('a').on('click', function () {
+                menu.removeClass('fadeOutUp fadeInDown lmenu-active');
+            });
+        });
+    </script>
+
+</h:head>
+
+
+<h:body styleClass="landing-body">
+    <div id="home" class="landing-wrapper">
+        <div id="header">
+
+            <ui:include src="/link_include.xhtml"/>
+
+            <h:form id="mainForm">
+
+                <div style="margin-top: 15px">
+                    <!-- Add background image class="header-content" -->
+                    <div class="search-box report-inst-center">
+                        <p style="color: white; font-size: 25px;margin-top: 10px;margin-bottom: 10px;text-align: center">LATEST NEWS</p>
+                        <div class="ui-g ui-fluid">
+                            <div class="ui-g-12 ui-lg-12">
+                                <div class="blog-card">
+                                    <div class="meta">
+                                        <div class="photo"
+                                             style="background-image: url(/resources/img/news1.jpeg)"></div>
+                                        <ul class="details">
+                                            <li class="author"><a href="#">John Doe</a></li>
+                                            <li class="date">Aug. 24, 2015</li>
+                                        </ul>
+                                    </div>
+                                    <div class="description">
+                                        <h1>News Title</h1>
+                                        <h2>Sub title</h2>
+                                        <p> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad eum dolorum
+                                            architecto obcaecati enim dicta praesentium, quam nobis! Neque ad aliquam facilis numquam. Veritatis, sit.</p>
+                                        <p class="read-more">
+                                            <a href="#">Read More</a>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="blog-card">
+                                    <div class="meta">
+                                        <div class="photo"
+                                             style="background-image: url(https://storage.googleapis.com/chydlx/codepen/blog-cards/image-2.jpg)"></div>
+                                        <ul class="details">
+                                            <li class="author"><a href="#">Jane Doe</a></li>
+                                            <li class="date">July. 15, 2015</li>
+                                        </ul>
+                                    </div>
+                                    <div class="description">
+                                        <h1>News Title</h1>
+                                        <h2>Sub Title</h2>
+                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad eum dolorum architecto obcaecati enim dicta praesentium, quam nobis! Neque ad aliquam facilis numquam. Veritatis, sit.</p>
+                                        <p class="read-more">
+                                            <a href="#">Read More</a>
+                                        </p>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </h:form>
+        </div>
+
+        <ui:include src="/home_footer_include.xhtml"/>
+    </div>
+
+
+</h:body>
+
+</html>

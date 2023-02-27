@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="QR_Code" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ba54ebbb-cf6c-4e64-89de-3eeb3166ba99">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="title" class="java.lang.String"/>
+	<parameter name="qrCode" class="java.awt.Image"/>
+	<parameter name="logo" class="java.awt.Image"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<group name="Group1">
+		<groupHeader>
+			<band height="696">
+				<textField>
+					<reportElement x="40" y="30" width="470" height="40" uuid="01a1e0ae-d118-435c-8ea5-b11bd089a7ae"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="20"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{title}+" QR Code"]]></textFieldExpression>
+				</textField>
+				<image scaleImage="RealSize" hAlign="Center">
+					<reportElement x="80" y="75" width="399" height="340" uuid="691777d4-3c22-4750-bdce-33713feb3c38"/>
+					<imageExpression><![CDATA[$P{qrCode}]]></imageExpression>
+				</image>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band height="801" splitType="Stretch">
+			<frame>
+				<reportElement x="0" y="0" width="555" height="801" uuid="8c108256-4f28-4976-aae8-831003e00c23"/>
+				<box>
+					<pen lineWidth="2.0" lineStyle="Double"/>
+				</box>
+			</frame>
+		</band>
+	</background>
+	<title>
+		<band height="83" splitType="Stretch">
+			<image scaleImage="FillFrame" vAlign="Middle">
+				<reportElement x="11" y="6" width="180" height="70" uuid="10ba0832-7b20-4d7d-a6fd-ef8daf64c408"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+		</band>
+	</title>
+</jasperReport>

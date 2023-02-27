@@ -1,0 +1,11 @@
+
+	 
+	 public List<SelectItem> get####DD() {
+		List<SelectItem> l = new ArrayList<SelectItem>();
+		for (#### val : ####.values()) {
+			l.add(new SelectItem(val, val.getFriendlyName()));
+		}
+		return l;
+	}
+	
+	//===============DO NOT REMOVE THIS=================//

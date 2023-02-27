@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <f:facet name="first">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <meta name="viewport"
+              content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+    </f:facet>
+    <title>home</title>
+    <script type="text/javascript">
+        $(function () {
+            var menu = $('#menu');
+
+            $('#menu-button').on('click', function (e) {
+                if (menu.hasClass('lmenu-active')) {
+                    menu.addClass('fadeOutUp');
+
+                    setTimeout(function () {
+                        menu.removeClass('fadeOutUp fadeInDown lmenu-active');
+                    }, 500);
+                } else {
+                    menu.addClass('lmenu-active fadeInDown');
+                }
+                e.preventDefault();
+            });
+
+            menu.find('a').on('click', function () {
+                menu.removeClass('fadeOutUp fadeInDown lmenu-active');
+            });
+        });
+    </script>
+</h:head>
+
+<h:body styleClass="landing-body">
+    <div id="home" class="landing-wrapper">
+        <div id="header">
+            <ui:include src="/link_include.xhtml"/>
+
+            <h:form id="mainForm">
+
+                <div class="header-content">
+                    <h1>TERTIARY VERIFY</h1>
+                    <br/>
+
+                    <div class="search-box center">
+                        <center>
+                            <p style="color: white; font-size: 25px">Institution Report
+                                Status</p>
+                        </center>
+
+                        <p:panelGrid class="list-group-item" style="width:100%"
+                                     columns="1" layout="grid">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <div class="ui-inputgroup ui-g-12 ui-md-10">
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputText style="width:100%" id="refNum"
+                                                     class="form-control"
+                                                     value="#{reportedInstitutionsUI.refNumber}"
+                                                     placeholder="Enter Reference Number" required="true"
+                                                     type="text" requiredMessage="Please enter reference number"/>
+                                    </h:panelGroup>
+                                    <p:spacer width="5"></p:spacer>
+                                    <p:commandButton onstart="PF('loading').show()"
+                                                     oncomplete="PF('loading').hide()" value="Submit"
+                                                     update="@form" icon="fa fa-search"
+                                                     styleClass="btn btn-block btn-success"
+                                                     actionListener="#{reportedInstitutionsUI.findByRefNumber}"/>
+                                </div>
+
+
+                            </h:panelGroup>
+                        </p:panelGrid>
+
+
+                    </div>
+                </div>
+
+
+                <p:dialog widgetVar="statusDialog" hideEffect="clip" header="Status Details"
+                          showEffect="clip" id="statusDialog" appendTo="@(body)" modal="true"
+                          closable="true" width="70%" height="80%" responsive="true"
+                          position="top" closeOnEscape="true">
+                    <p:panelGrid style="width:100%" columns="1">
+                        <f:facet name="header">
+                            <p:outputLabel value="Institutions Details"/>
+                        </f:facet>
+
+                        <p:panelGrid columns="2" layout="grid" style="margin-bottom:20px">
+                            <h:outputText value="Status"/>
+                            <h:outputText
+                                    value=": #{reportedInstitutionsUI.reportedInstitutions.status.friendlyName}"/>
+
+                            <h:outputText value="Institution Name"/>
+                            <h:outputText
+                                    value=": #{reportedInstitutionsUI.reportedInstitutions.institutionName}"/>
+
+                            <h:outputText value="Report Type"/>
+                            <h:outputText
+                                    value=": #{reportedInstitutionsUI.reportedInstitutions.reportType.friendlyName}"/>
+
+                            <h:outputText value="Reference Number"/>
+                            <h:outputText
+                                    value=": #{reportedInstitutionsUI.reportedInstitutions.refNumber}"/>
+
+                        </p:panelGrid>
+
+                        <p:panelGrid
+                                rendered="#{reportedInstitutionsUI.reportedInstitutions.investigatorFeedback ne null}"
+                                class="list-group-item" style="width:100%" columns="1"
+                                layout="grid">
+                            <p:outputLabel value="Investigator Feedback: "/>
+                            <p:outputLabel escape="false"
+                                           value="#{reportedInstitutionsUI.reportedInstitutions.investigatorFeedback}"></p:outputLabel>
+                        </p:panelGrid>
+
+                    </p:panelGrid>
+
+                </p:dialog>
+
+
+                <ui:include src="/common_dialog.xhtml"/>
+
+            </h:form>
+        </div>
+
+
+        <ui:include src="/home_footer_include_2.xhtml">
+        </ui:include>
+    </div>
+</h:body>
+
+</html>

@@ -1,0 +1,299 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pa="http://primefaces.org/barcelona"
+    xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+    <div class="topbar">
+       <!--  <div class="logo">
+            <h:link outcome="/dashboard">
+                <p:graphicImage class="user-card-content" name="images/gau_logo.PNG" library="barcelona-layout" />
+            </h:link>
+        </div> -->
+        
+        <p:graphicImage style="margin:0px" name="images/logo.jpg" library="barcelona-layout" />
+        
+        <a id="topbar-menu-button" href="#">
+            <i class="fa fa-bars"></i>
+        </a>
+        
+        <ul class="topbar-menu fadeInDown animated">
+            <li class="profile-item">
+                <a id="topbar-usermenu-button" href="#">                            
+                    <div class="profile-image">
+                        <p:graphicImage rendered="false" name="images/profile-image.png" library="barcelona-layout" />
+                         <p:graphicImage class="profile-user-img img-responsive img-circle" cache="false"  value="#{profileUI.imageFromDB}" id="toolBarprofileImg" library="barcelona-layout" rendered="true"/>	
+					                      
+                    </div>
+                    <h:panelGroup id="pgProfileInfo">
+	                    <div class="profile-info">
+	                        <span class="topbar-item-name profile-name">#{profileUI.currentUser.name} </span> 
+	                        <span class="topbar-item-name profile-role">#{profileUI.currentUser.surname}</span> 
+	                    </div>
+                    </h:panelGroup>
+                </a>
+                
+                
+                  <ul id="topbar-usermenu" class="usermenu">
+	                    <li>
+	                        <a href="#{request.contextPath}/user/profile.xhtml">
+	                            <i class="fa fa-fw fa-user"></i>
+	                            <span class="topbar-item-name">Profile</span>
+	                        </a>
+	                    </li>
+	                     <li>
+	                        <a href="#{request.contextPath}/logout">
+	                            <i class="fa fa-fw fa-lock"></i>
+	                            <span class="topbar-item-name">Logout</span>
+	                        </a>
+	                    </li>
+                   </ul>
+                
+                <ul id="topbar-usermenu-not-in-use" class="usermenu">
+                		<!-- NOT IN USE -->
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-fw fa-user"></i>
+                            <span class="topbar-item-name">Profile</span>
+                            <span class="topbar-submenuitem-badge">4</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-fw fa-cog"></i>
+                            <span class="topbar-item-name">Settings</span>
+                            <i class="fa fa-angle-down menu-arrow"></i>
+                            <span class="topbar-submenuitem-badge">2</span>
+                        </a>
+                        <ul>
+                            <li role="menuitem">
+                                <a href="#">
+                                    <i class="fa fa-fw fa-paint-brush"></i>
+                                    <span>Change</span>
+                                </a>
+                            </li>
+                            <li role="menuitem">
+                                <a href="#">
+                                    <i class="fa fa-fw fa-star-o"></i>
+                                    <span>Favorites</span>
+                                </a>
+                            </li>
+                            <li role="menuitem">
+                                <a href="#">
+                                    <i class="fa fa-fw fa-lock"></i>
+                                    <span>Lock Screen</span>
+                                </a>
+                            </li>
+                            <li role="menuitem">
+                                <a href="#">
+                                    <i class="fa fa-fw fa-picture-o"></i>
+                                    <span>Wallpaper</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-fw fa-envelope-o"></i>
+                            <span class="topbar-item-name">Messages</span>
+                            <i class="fa fa-angle-down menu-arrow"></i>
+                        </a>
+                        <ul>
+                            <li role="menuitem">
+                                <a href="#" class="topbar-message">
+                                    <p:graphicImage name="images/avatar1.png" library="barcelona-layout" width="25"/>
+                                    <span>Give me a call</span>
+                                </a>
+                            </li>
+                            <li role="menuitem">
+                                <a href="#" class="topbar-message">
+                                    <p:graphicImage name="images/avatar2.png" library="barcelona-layout" width="25"/>
+                                    <span>Reports attached</span>
+                                </a>
+                            </li>
+                            <li role="menuitem">
+                                <a href="#" class="topbar-message">
+                                    <p:graphicImage name="images/avatar3.png" library="barcelona-layout" width="25"/>
+                                    <span>About your invoice</span>
+                                </a>
+                            </li>
+                            <li role="menuitem">
+                                <a href="#" class="topbar-message">
+                                    <p:graphicImage name="images/avatar2.png" library="barcelona-layout" width="25"/>
+                                    <span>Meeting today</span>
+                                </a>
+                            </li>
+                            <li role="menuitem">
+                                <a href="#" class="topbar-message">
+                                    <p:graphicImage name="images/avatar4.png" library="barcelona-layout" width="25"/>
+                                    <span>Out of office</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-fw fa-bell-o"></i>
+                            <span class="topbar-item-name">Notifications</span>
+                            <i class="fa fa-angle-down menu-arrow"></i>
+                        </a>
+                        <ul>
+                            <li role="menuitem">
+                                <a href="#">
+                                    <i class="fa fa-fw fa-tasks"></i>
+                                    <span>Pending tasks</span>
+                                </a>
+                            </li>
+                            <li role="menuitem">
+                                <a href="#">
+                                    <i class="fa fa-fw fa-calendar-check-o"></i>
+                                    <span>Meeting today</span>
+                                </a>
+                            </li>
+                            <li role="menuitem">
+                                <a href="#">
+                                    <i class="fa fa-fw fa-download"></i>
+                                    <span>Download</span>
+                                </a>
+                            </li>
+                            <li role="menuitem">
+                                <a href="#">
+                                    <i class="fa fa-fw fa-plane"></i>
+                                    <span>Book flight</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            
+            <c:if test="false">
+            <!-- NOT IN USE -->
+            <li>
+                <a href="#">
+                    <i class="topbar-icon fa fa-fw fa-cog"></i>
+                    <span class="topbar-item-name">Settings</span>
+                </a>
+                <ul class="animated">
+                    <li role="menuitem">
+                        <a href="#">
+                            <i class="fa fa-fw fa-paint-brush"></i>
+                            <span>Change Theme</span>
+                            <span class="topbar-submenuitem-badge">4</span>
+                        </a>
+                    </li>
+                    <li role="menuitem">
+                        <a href="#">
+                            <i class="fa fa-fw fa-star-o"></i>
+                            <span>Favorites</span>
+                        </a>
+                    </li>
+                    <li role="menuitem">
+                        <a href="#">
+                            <i class="fa fa-fw fa-lock"></i>
+                            <span>Lock Screen</span>
+                            <span class="topbar-submenuitem-badge">2</span>
+                        </a>
+                    </li>
+                    <li role="menuitem">
+                        <a href="#">
+                            <i class="fa fa-fw fa-picture-o"></i>
+                            <span>Wallpaper</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            </c:if>
+            
+             <c:if test="false">
+            <li>
+                <a href="#">
+                    <i class="topbar-icon material-icons animated swing fa fa-fw fa-envelope-o"></i>
+                    <span class="topbar-badge animated rubberBand">5</span>
+                    <span class="topbar-item-name">Messages</span>
+                </a>
+                <ul class="animated">
+                    <li role="menuitem">
+                        <a href="#" class="topbar-message">
+                            <p:graphicImage name="images/avatar1.png" library="barcelona-layout" width="35"/>
+                            <span>Give me a call</span>
+                        </a>
+                    </li>
+                    <li role="menuitem">
+                        <a href="#" class="topbar-message">
+                            <p:graphicImage name="images/avatar2.png" library="barcelona-layout" width="35"/>
+                            <span>Reports attached</span>
+                        </a>
+                    </li>
+                    <li role="menuitem">
+                        <a href="#" class="topbar-message">
+                            <p:graphicImage name="images/avatar3.png" library="barcelona-layout" width="35"/>
+                            <span>About your invoice</span>
+                        </a>
+                    </li>
+                    <li role="menuitem">
+                        <a href="#" class="topbar-message">
+                            <p:graphicImage name="images/avatar2.png" library="barcelona-layout" width="35"/>
+                            <span>Meeting today</span>
+                        </a>
+                    </li>
+                    <li role="menuitem">
+                        <a href="#" class="topbar-message">
+                            <p:graphicImage name="images/avatar4.png" library="barcelona-layout" width="35"/>
+                            <span>Out of office</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="topbar-icon fa fa-fw fa-bell-o"></i>
+                    <span class="topbar-badge animated rubberBand">4</span>
+                    <span class="topbar-item-name">Notifications</span>
+                </a>
+                <ul class="animated">
+                    <li role="menuitem">
+                        <a href="#">
+                            <i class="fa fa-fw fa-tasks"></i>
+                            <span>Pending tasks</span>
+                            <span class="topbar-submenuitem-badge">6</span>
+                        </a>
+                    </li>
+                    <li role="menuitem">
+                        <a href="#">
+                            <i class="fa fa-fw fa-calendar-check-o"></i>
+                            <span>Meeting today</span>
+                        </a>
+                    </li>
+                    <li role="menuitem">
+                        <a href="#">
+                            <i class="fa fa-fw fa-download"></i>
+                            <span>Download</span>
+                        </a>
+                    </li>
+                    <li role="menuitem">
+                        <a href="#">
+                            <i class="fa fa-fw fa-plane"></i>
+                            <span>Book flight</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="search-item">
+                <h:form>
+                    <span class="md-inputfield">
+                        <p:inputText />
+                        <i class="fa fa-search"></i>
+                        <label>Search</label>
+                    </span>
+                    
+                </h:form>
+            </li>
+           </c:if>
+        </ul>
+    </div>
+
+</ui:composition>

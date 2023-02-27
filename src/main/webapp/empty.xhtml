@@ -1,0 +1,43 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">City</ui:define>
+
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <div class="card">
+                    <h3 class="box-title">
+                        <i class="fa fa-th"></i> Empty
+                    </h3>
+                    <h:form id="mainForm">
+
+                        <p:commandButton onstart="PF('loading1').show()"
+                                         type="read more"
+                                         value="READ MORE" styleClass="secondary">
+                        </p:commandButton>
+
+
+                        <p:dialog resizable="false" draggable="false"  minimizable="false" widgetVar="loading1" hideEffect="clip" showEffect="clip" id="loading1" appendTo="@(body)" modal="true" closable="true" width="80%" height="50%" responsive="true" closeOnEscape="true">
+                            <div style="text-align: center;">
+                                <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+                                <br/>
+                                <br/>
+                                Initializing Spring Framework Servlet...
+                            </div>
+                        </p:dialog>
+
+
+
+
+                    </h:form>
+                </div>
+            </div>
+        </div>
+
+    </ui:define>
+
+</ui:composition>
