@@ -208,7 +208,7 @@
 
         <repository>
             <id>jasper1</id>
-            <url>https://jaspersoft.artifactoryonline.com/jaspersoft/jaspersoft-repo/</url>
+            <url>https://jaspersoft.jfrog.io/jaspersoft/third-party-ce-artifacts/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
