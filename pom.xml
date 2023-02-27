@@ -132,12 +132,6 @@
             <artifactId>xmlbeans</artifactId>
             <version>2.3.0</version>
         </dependency>
-
-        <dependency>
-            <groupId>com.lowagie</groupId>
-            <artifactId>itext</artifactId>
-            <version>2.1.7</version>
-        </dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
@@ -201,7 +195,7 @@
         <repository>
             <id>primefaces-maven-repository</id>
             <name>PrimeFaces Maven Repository</name>
-            <url>http://repository.primefaces.org</url>
+            <url>https://repository.primefaces.org</url>
         </repository>
 
 
