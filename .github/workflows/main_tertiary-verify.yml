@@ -50,4 +50,4 @@ jobs:
           app-name: 'tertiary-verify'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_85514716053D45AD8D140FC28D368A84 }}
-          package: '${{ github.workspace }}\*.war'
+          package: '*.war'
