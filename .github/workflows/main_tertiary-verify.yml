@@ -51,6 +51,3 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_85514716053D45AD8D140FC28D368A84 }}
           package: '*.war'
-
-      - name: Start Spring Boot app
-        run: java -jar ./target/TertiaryVerifyWebApp-1.0-SNAPSHOT.war com.pc.common.SpringPrimeFacesApplication
