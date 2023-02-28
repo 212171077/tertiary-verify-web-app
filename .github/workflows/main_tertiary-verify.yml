@@ -1,53 +1,36 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
+# Name of the GitHub Actions workflow
 name: Build and deploy WAR app to Azure Web App - tertiary-verify
 
+# Trigger the workflow on push events to the main branch
 on:
   push:
     branches:
       - main
-  workflow_dispatch:
 
+# Jobs to run in the workflow
 jobs:
-  build:
+  build-and-deploy:
     runs-on: windows-latest
-
     steps:
-      - uses: actions/checkout@v2
+      # Checkout the code from the GitHub repository
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      - name: Set up Java version
-        uses: actions/setup-java@v1
+      # Set up the Java environment with Maven
+      - name: Set up Java environment
+        uses: actions/setup-java@v2
         with:
           java-version: '8'
 
-      - name: Build with Maven
+      # Build the WAR file using Maven
+      - name: Build WAR file
         run: mvn clean install
 
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v2
-        with:
-          name: java-app
-          path: '${{ github.workspace }}/target/*.war'
-
-  deploy:
-    runs-on: windows-latest
-    needs: build
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v2
-        with:
-          name: java-app
-
+      # Deploy the WAR file to Azure Web App
       - name: Deploy to Azure Web App
-        id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'tertiary-verify'
-          slot-name: 'Production'
+          slot-name: production
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_85514716053D45AD8D140FC28D368A84 }}
-          package: '*.war'
+          package: target/TertiaryVerifyWebApp-1.0-SNAPSHOT.war
